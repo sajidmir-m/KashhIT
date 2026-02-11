@@ -1,0 +1,49 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Fetch full git history for Vercel to identify commit author
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Pull Vercel environment configuration
+      # Requires VERCEL_TOKEN secret to be set in GitHub repository settings
+      # IMPORTANT: All collaborators who push to this repo must be added to the Vercel project
+      # Go to Vercel Dashboard → Project Settings → Collaborators to add team members
+      - name: Vercel pull (production)
+        run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Build using Vercel (leverages vercel.json if present)
+      - name: Vercel build (production)
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Deploy prebuilt output to production
+      # Note: Vercel checks if the git commit author has access to the team/project
+      # If you see "Git author must have access" error, add the collaborator to Vercel project
+      - name: Vercel deploy (production)
+        run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
