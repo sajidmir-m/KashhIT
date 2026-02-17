@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,6 @@ import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/lib/auth';
 import { toast } from 'sonner';
 import { CartButton } from '@/components/CartButton';
-import { useCartQuantity } from '@/hooks/useCartQuantity';
 import { RecentlyViewed } from '@/components/RecentlyViewed';
 
 const Home = () => {
@@ -54,6 +53,32 @@ const Home = () => {
     return match ? match.id : null;
   };
 
+  // Fetch all cart quantities once (Home renders many product cards)
+  const { data: cartQuantities } = useQuery({
+    queryKey: ['cart-quantities', user?.id],
+    queryFn: async () => {
+      if (!user) return {} as Record<string, number>;
+      const { data, error } = await supabase
+        .from('cart_items')
+        .select('product_id, quantity')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      (data || []).forEach((row: any) => {
+        if (row?.product_id) map[row.product_id] = row?.quantity || 0;
+      });
+      return map;
+    },
+    enabled: !!user,
+    staleTime: 10_000,
+  });
+
+  const sortedHomeCategories = useMemo(() => {
+    return (homeCategories || [])
+      .slice()
+      .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  }, [homeCategories]);
+
   const getCategoryImage = (name?: string) => {
     const n = (name || '').toLowerCase();
     if (/(atta|rice|dal|lentil|oil|sugar|grain)/.test(n)) return '/atta%20rice.png';
@@ -62,6 +87,7 @@ const Home = () => {
     if (/(chocolate|candy|sweet)/.test(n)) return '/choclates.png';
     if (/(dairy|bread|egg|milk|bakery)/.test(n)) return '/bread.png';
     if (/(feminine|hygiene|sanitary)/.test(n)) return '/femine%20Hygiene.png';
+    if (/(breakfast|instant.*food)/.test(n)) return '/breakfast%20and%20instant%20food.png';
     if (/(fruit|vegetable|veggie|greens|produce)/.test(n)) return '/fruits%20and%20vegitables.png';
     if (/(home).*?(essential|clean|household)/.test(n)) return '/home%20essentials.png';
     if (/(ice).*?(cream)/.test(n)) return '/ice%20creams.png';
@@ -70,6 +96,8 @@ const Home = () => {
     if (/(kid|baby|infant|toddler)/.test(n)) return '/baby%20care.png';
     if (/(masala|spice|dry.*fruit|nuts?)/.test(n)) return '/masala.png';
     if (/(tea|chai)/.test(n)) return '/tea.png';
+    if (/(stationery|stationary)/.test(n)) return '/stationary.png';
+    if (/(soap|shampoo|body wash|hair care)/.test(n)) return '/soapandshampo.webp';
     return '/placeholder.svg';
   };
 
@@ -463,16 +491,15 @@ const Home = () => {
           </div>
           <div className="rounded-2xl border border-emerald-100 p-3 sm:p-4 md:p-6 lg:p-8 bg-emerald-50/50 mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8">
             <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 md:gap-4 justify-items-center items-start">
-              {(homeCategories || [])
-                .slice() // shallow copy for sort
-                .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
-                .map((cat) => (
+              {sortedHomeCategories.map((cat) => (
                   <Link key={cat.id} to={`/products?category=${cat.id}`} className="group cursor-pointer w-full">
                     <div className="text-center">
                       <div className="w-[80px] h-[80px] bg-gradient-to-br from-emerald-400 to-green-500 rounded-lg flex items-center justify-center mb-1 sm:mb-2 mx-auto group-hover:scale-110 transition-transform shadow-sm overflow-hidden">
                         <img
                           src={getCategoryImage(cat.name)}
                           alt={cat.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -563,69 +590,7 @@ const Home = () => {
                 <div key={product.id} className="flex-shrink-0 w-[calc((100%-0.75rem)/2)] snap-start">
                   <ProductCard
                     product={product}
-                    onAdd={() => { }} // Handled by CartButton
-                    onBuyNow={async (product) => {
-                      if (!user) {
-                        toast.error('Please login to continue');
-                        navigate('/auth');
-                        return;
-                      }
-
-                      // Ensure product is in cart
-                      const { data: cartItem } = await supabase
-                        .from('cart_items')
-                        .select('quantity')
-                        .eq('user_id', user.id)
-                        .eq('product_id', product.id)
-                        .maybeSingle();
-
-                      if (!cartItem || cartItem.quantity === 0) {
-                        const { data: existing } = await supabase
-                          .from('cart_items')
-                          .select('*')
-                          .eq('user_id', user.id)
-                          .eq('product_id', product.id)
-                          .maybeSingle();
-
-                        if (existing) {
-                          await supabase
-                            .from('cart_items')
-                            .update({ quantity: 1 })
-                            .eq('id', existing.id);
-                        } else {
-                          await supabase
-                            .from('cart_items')
-                            .insert({
-                              user_id: user.id,
-                              product_id: product.id,
-                              quantity: 1,
-                            });
-                        }
-                        queryClient.invalidateQueries({ queryKey: ['cart'] });
-                        queryClient.invalidateQueries({ queryKey: ['cart-item'] });
-                      }
-
-                      const { data: updatedItem } = await supabase
-                        .from('cart_items')
-                        .select('quantity')
-                        .eq('user_id', user.id)
-                        .eq('product_id', product.id)
-                        .single();
-
-                      navigate('/checkout', {
-                        state: {
-                          buyNow: [{
-                            product: {
-                              id: product.id,
-                              name: product.name,
-                              price: product.price,
-                            },
-                            quantity: updatedItem?.quantity || 1,
-                          }],
-                        },
-                      });
-                    }}
-                    user={user}
+                    cartQuantity={cartQuantities?.[product.id] || 0}
                     navigate={navigate}
                   />
                 </div>
@@ -637,27 +602,7 @@ const Home = () => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onAdd={() => { }} // Handled by CartButton
-                  onBuyNow={(product) => {
-                    if (!user) {
-                      toast.error('Please login to continue');
-                      navigate('/auth');
-                      return;
-                    }
-                    navigate('/checkout', {
-                      state: {
-                        buyNow: [{
-                          product: {
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                          },
-                          quantity: 1,
-                        }],
-                      },
-                    });
-                  }}
-                  user={user}
+                  cartQuantity={cartQuantities?.[product.id] || 0}
                   navigate={navigate}
                 />
               ))}
@@ -668,27 +613,7 @@ const Home = () => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onAdd={() => { }} // Handled by CartButton
-                  onBuyNow={(product) => {
-                    if (!user) {
-                      toast.error('Please login to continue');
-                      navigate('/auth');
-                      return;
-                    }
-                    navigate('/checkout', {
-                      state: {
-                        buyNow: [{
-                          product: {
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                          },
-                          quantity: 1,
-                        }],
-                      },
-                    });
-                  }}
-                  user={user}
+                  cartQuantity={cartQuantities?.[product.id] || 0}
                   navigate={navigate}
                 />
               ))}
@@ -710,202 +635,22 @@ const Home = () => {
         title="Top Deals"
         items={topDeals}
         onAdd={() => { }} // Handled by CartButton
-        onBuyNow={async (product) => {
-          if (!user) {
-            toast.error('Please login to continue');
-            navigate('/auth');
-            return;
-          }
-
-          // Ensure product is in cart
-          const { data: cartItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .maybeSingle();
-
-          if (!cartItem || cartItem.quantity === 0) {
-            const { data: existing } = await supabase
-              .from('cart_items')
-              .select('*')
-              .eq('user_id', user.id)
-              .eq('product_id', product.id)
-              .maybeSingle();
-
-            if (existing) {
-              await supabase
-                .from('cart_items')
-                .update({ quantity: 1 })
-                .eq('id', existing.id);
-            } else {
-              await supabase
-                .from('cart_items')
-                .insert({
-                  user_id: user.id,
-                  product_id: product.id,
-                  quantity: 1,
-                });
-            }
-            queryClient.invalidateQueries({ queryKey: ['cart'] });
-            queryClient.invalidateQueries({ queryKey: ['cart-item'] });
-          }
-
-          const { data: updatedItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .single();
-
-          navigate('/checkout', {
-            state: {
-              buyNow: [{
-                product: {
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                },
-                quantity: updatedItem?.quantity || 1,
-              }],
-            },
-          });
-        }}
         navigate={navigate}
+        cartQuantities={cartQuantities || {}}
       />
       <HomeRail
         title="Fresh Arrivals"
         items={freshArrivals}
         onAdd={() => { }} // Handled by CartButton
-        onBuyNow={async (product) => {
-          if (!user) {
-            toast.error('Please login to continue');
-            navigate('/auth');
-            return;
-          }
-
-          // Ensure product is in cart
-          const { data: cartItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .maybeSingle();
-
-          if (!cartItem || cartItem.quantity === 0) {
-            const { data: existing } = await supabase
-              .from('cart_items')
-              .select('*')
-              .eq('user_id', user.id)
-              .eq('product_id', product.id)
-              .maybeSingle();
-
-            if (existing) {
-              await supabase
-                .from('cart_items')
-                .update({ quantity: 1 })
-                .eq('id', existing.id);
-            } else {
-              await supabase
-                .from('cart_items')
-                .insert({
-                  user_id: user.id,
-                  product_id: product.id,
-                  quantity: 1,
-                });
-            }
-            queryClient.invalidateQueries({ queryKey: ['cart'] });
-            queryClient.invalidateQueries({ queryKey: ['cart-item'] });
-          }
-
-          const { data: updatedItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .single();
-
-          navigate('/checkout', {
-            state: {
-              buyNow: [{
-                product: {
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                },
-                quantity: updatedItem?.quantity || 1,
-              }],
-            },
-          });
-        }}
         navigate={navigate}
+        cartQuantities={cartQuantities || {}}
       />
       <HomeRail
         title="Recommended for You"
         items={recommended}
         onAdd={() => { }} // Handled by CartButton
-        onBuyNow={async (product) => {
-          if (!user) {
-            toast.error('Please login to continue');
-            navigate('/auth');
-            return;
-          }
-
-          // Ensure product is in cart
-          const { data: cartItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .maybeSingle();
-
-          if (!cartItem || cartItem.quantity === 0) {
-            const { data: existing } = await supabase
-              .from('cart_items')
-              .select('*')
-              .eq('user_id', user.id)
-              .eq('product_id', product.id)
-              .maybeSingle();
-
-            if (existing) {
-              await supabase
-                .from('cart_items')
-                .update({ quantity: 1 })
-                .eq('id', existing.id);
-            } else {
-              await supabase
-                .from('cart_items')
-                .insert({
-                  user_id: user.id,
-                  product_id: product.id,
-                  quantity: 1,
-                });
-            }
-            queryClient.invalidateQueries({ queryKey: ['cart'] });
-            queryClient.invalidateQueries({ queryKey: ['cart-item'] });
-          }
-
-          const { data: updatedItem } = await supabase
-            .from('cart_items')
-            .select('quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .single();
-
-          navigate('/checkout', {
-            state: {
-              buyNow: [{
-                product: {
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                },
-                quantity: updatedItem?.quantity || 1,
-              }],
-            },
-          });
-        }}
         navigate={navigate}
+        cartQuantities={cartQuantities || {}}
       />
 
       {/* Recently Viewed Products */}
@@ -1154,59 +899,14 @@ const AnimatedInView = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const MiniProductCard = ({ product, onAdd, onBuyNow, navigate }: { product: any; onAdd: () => void; onBuyNow: () => void; navigate: any }) => {
+const MiniProductCard = ({ product, navigate, cartQuantity }: { product: any; navigate: any; cartQuantity: number }) => {
   const displayImage = (product as any).main_image_url || product.image_url;
-  const cartQuantity = useCartQuantity(product.id);
   const unitPrice = parseFloat(product.price) || 0;
   const totalPrice = (unitPrice * cartQuantity).toFixed(2);
 
   const handleViewDetails = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/products/${product.id}`);
-  };
-
-  const handleBuyNow = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const { user } = useAuth();
-    if (!user) {
-      toast.error('Please login to continue');
-      navigate('/auth');
-      return;
-    }
-
-    // Ensure product is in cart
-    const { data: cartItem } = await supabase
-      .from('cart_items')
-      .select('quantity')
-      .eq('user_id', user.id)
-      .eq('product_id', product.id)
-      .maybeSingle();
-
-    if (!cartItem || cartItem.quantity === 0) {
-      const { data: existing } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('product_id', product.id)
-        .maybeSingle();
-
-      if (existing) {
-        await supabase
-          .from('cart_items')
-          .update({ quantity: 1 })
-          .eq('id', existing.id);
-      } else {
-        await supabase
-          .from('cart_items')
-          .insert({
-            user_id: user.id,
-            product_id: product.id,
-            quantity: 1,
-          });
-      }
-    }
-
-    onBuyNow();
   };
 
   return (
@@ -1225,6 +925,8 @@ const MiniProductCard = ({ product, onAdd, onBuyNow, navigate }: { product: any;
             <img
               src={displayImage}
               alt={product.name}
+              loading="lazy"
+              decoding="async"
               className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
@@ -1277,20 +979,13 @@ const MiniProductCard = ({ product, onAdd, onBuyNow, navigate }: { product: any;
               showLabel={true}
             />
           </div>
-          <Button
-            variant="default"
-            className="flex-1 h-8 sm:h-9 text-[10px] xs:text-xs sm:text-sm bg-emerald-500 hover:bg-emerald-600 text-white min-w-0 px-1.5 sm:px-2.5 whitespace-nowrap"
-            onClick={handleBuyNow}
-          >
-            Buy Now
-          </Button>
         </div>
       </CardFooter>
     </Card>
   );
 };
 
-const HomeRail = ({ title, items, onAdd, onBuyNow, navigate }: { title: string; items: any[] | undefined; onAdd: (id: string) => void; onBuyNow: (product: any) => void; navigate: any }) => {
+const HomeRail = ({ title, items, onAdd, navigate, cartQuantities }: { title: string; items: any[] | undefined; onAdd: (id: string) => void; navigate: any; cartQuantities: Record<string, number> }) => {
   if (!items || items.length === 0) return null;
   return (
     <section className="py-6 sm:py-8 md:py-10 px-4 bg-white">
@@ -1306,9 +1001,8 @@ const HomeRail = ({ title, items, onAdd, onBuyNow, navigate }: { title: string; 
               <div key={p.id} className="flex-shrink-0 w-[calc((100%-0.75rem)/2)] snap-start">
                 <MiniProductCard
                   product={p}
-                  onAdd={() => onAdd(p.id)}
-                  onBuyNow={() => onBuyNow(p)}
                   navigate={navigate}
+                  cartQuantity={cartQuantities?.[p.id] || 0}
                 />
               </div>
             ))}
@@ -1319,9 +1013,8 @@ const HomeRail = ({ title, items, onAdd, onBuyNow, navigate }: { title: string; 
               <MiniProductCard
                 key={p.id}
                 product={p}
-                onAdd={() => onAdd(p.id)}
-                onBuyNow={() => onBuyNow(p)}
                 navigate={navigate}
+                cartQuantity={cartQuantities?.[p.id] || 0}
               />
             ))}
           </div>
@@ -1331,9 +1024,8 @@ const HomeRail = ({ title, items, onAdd, onBuyNow, navigate }: { title: string; 
               <MiniProductCard
                 key={p.id}
                 product={p}
-                onAdd={() => onAdd(p.id)}
-                onBuyNow={() => onBuyNow(p)}
                 navigate={navigate}
+                cartQuantity={cartQuantities?.[p.id] || 0}
               />
             ))}
           </div>
@@ -1343,100 +1035,14 @@ const HomeRail = ({ title, items, onAdd, onBuyNow, navigate }: { title: string; 
   );
 };
 
-const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: any; onAdd: () => void; onBuyNow?: (product: any) => void; user: any; navigate: any }) => {
-  const [gallery, setGallery] = useState<Array<string> | null>(null);
-  const cartQuantity = useCartQuantity(product.id);
+const ProductCard = ({ product, navigate, cartQuantity }: { product: any; navigate: any; cartQuantity: number }) => {
   const unitPrice = parseFloat(product.price) || 0;
   const totalPrice = (unitPrice * cartQuantity).toFixed(2);
-  useEffect(() => {
-    let isMounted = true;
-    const load = async () => {
-      try {
-        const { data, error } = await supabase.storage
-          .from('product-images')
-          .list(product.id, { sortBy: { column: 'created_at', order: 'asc' } });
-
-        if (error) {
-          return;
-        }
-
-        const images = (data || [])
-          .filter((i: any) => i.name !== '.empty')
-          .map((i: any) =>
-            supabase.storage
-              .from('product-images')
-              .getPublicUrl(`${product.id}/${i.name}`)
-              .data.publicUrl
-          );
-
-        if (isMounted) setGallery(images);
-      } catch (error) {
-        if (isMounted) setGallery(null);
-      }
-    };
-    load();
-    return () => { isMounted = false; };
-  }, [product?.id]);
-
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const hasGallery = gallery && gallery.length > 0;
-
-  useEffect(() => {
-    if (hasGallery && !selectedImage) {
-      setSelectedImage(gallery[0]);
-    }
-  }, [hasGallery, selectedImage, gallery]);
-
-  const displayImage = selectedImage || (product as any).main_image_url || product.image_url;
+  const displayImage = (product as any).main_image_url || product.image_url;
 
   const handleViewDetails = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/products/${product.id}`);
-  };
-
-  const handleBuyNow = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!onBuyNow || !user) {
-      if (!user) {
-        toast.error('Please login to continue');
-        navigate('/auth');
-      }
-      return;
-    }
-
-    // Ensure product is in cart
-    const { data: cartItem } = await supabase
-      .from('cart_items')
-      .select('quantity')
-      .eq('user_id', user.id)
-      .eq('product_id', product.id)
-      .maybeSingle();
-
-    if (!cartItem || cartItem.quantity === 0) {
-      const { data: existing } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('product_id', product.id)
-        .maybeSingle();
-
-      if (existing) {
-        await supabase
-          .from('cart_items')
-          .update({ quantity: 1 })
-          .eq('id', existing.id);
-      } else {
-        await supabase
-          .from('cart_items')
-          .insert({
-            user_id: user.id,
-            product_id: product.id,
-            quantity: 1,
-          });
-      }
-    }
-
-    onBuyNow(product);
   };
 
   return (
@@ -1455,6 +1061,8 @@ const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: an
             <img
               src={displayImage}
               alt={product.name}
+              loading="lazy"
+              decoding="async"
               className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
@@ -1507,13 +1115,6 @@ const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: an
               showLabel={true}
             />
           </div>
-          <Button
-            variant="default"
-            className="flex-1 h-8 sm:h-9 text-[10px] xs:text-xs sm:text-sm bg-emerald-500 hover:bg-emerald-600 text-white min-w-0 px-1.5 sm:px-2.5 whitespace-nowrap"
-            onClick={handleBuyNow}
-          >
-            Buy Now
-          </Button>
         </div>
       </CardFooter>
     </Card>

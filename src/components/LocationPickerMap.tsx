@@ -1,168 +1,147 @@
-import { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import { MapPin, Navigation } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import type { LatLngLiteral } from "leaflet";
+import L from "leaflet";
+import { Navigation } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import "leaflet/dist/leaflet.css";
 
 interface LocationPickerMapProps {
-    latitude?: number;
-    longitude?: number;
-    onLocationSelect: (lat: number, lon: number) => void;
-    height?: number;
+  latitude?: number;
+  longitude?: number;
+  onLocationSelect: (lat: number, lon: number) => void;
+  height?: number;
 }
 
-export const LocationPickerMap = ({
-    latitude,
-    longitude,
-    onLocationSelect,
-    height = 300
-}: LocationPickerMapProps) => {
-    const mapRef = useRef<HTMLDivElement | null>(null);
-    const mapInstanceRef = useRef<L.Map | null>(null);
-    const markerRef = useRef<L.Marker | null>(null);
-    const [isLocating, setIsLocating] = useState(false);
+const defaultCenter: LatLngLiteral = { lat: 20.5937, lng: 78.9629 };
 
-    // Default to India center if no coords provided
-    const defaultLat = 20.5937;
-    const defaultLon = 78.9629;
-    const initialLat = latitude || defaultLat;
-    const initialLon = longitude || defaultLon;
-    const initialZoom = latitude ? 15 : 5;
+// Fix default Leaflet marker icon paths so markers show correctly in bundlers like Vite
+const defaultIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
-    useEffect(() => {
-        if (!mapRef.current) return;
+interface InternalMarkerProps {
+  marker: LatLngLiteral | null;
+  setMarker: (p: LatLngLiteral) => void;
+  onLocationSelect: (lat: number, lon: number) => void;
+}
 
-        // Initialize map if not already created
-        if (!mapInstanceRef.current) {
-            const map = L.map(mapRef.current).setView([initialLat, initialLon], initialZoom);
+const InternalInteractiveLayer = ({ marker, setMarker, onLocationSelect }: InternalMarkerProps) => {
+  const map = useMapEvents({
+    click(e) {
+      const next = e.latlng;
+      setMarker(next);
+      onLocationSelect(next.lat, next.lng);
+      map.setView(next, 16);
+    },
+  });
 
-            // Use OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors',
-                maxZoom: 19,
-            }).addTo(map);
+  useEffect(() => {
+    if (marker) {
+      map.setView(marker, 16);
+    }
+  }, [marker, map]);
 
-            // Add click handler
-            map.on('click', (e: L.LeafletMouseEvent) => {
-                const { lat, lng } = e.latlng;
-                updateMarker(lat, lng);
-                onLocationSelect(lat, lng);
-            });
+  return marker ? (
+    <Marker
+      position={marker}
+      icon={defaultIcon}
+      draggable
+      eventHandlers={{
+        dragend(e) {
+          const next = (e.target as L.Marker).getLatLng();
+          setMarker(next);
+          onLocationSelect(next.lat, next.lng);
+        },
+      }}
+    />
+  ) : null;
+};
 
-            mapInstanceRef.current = map;
-        }
+export const LocationPickerMap = ({ latitude, longitude, onLocationSelect, height = 300 }: LocationPickerMapProps) => {
+  const [isLocating, setIsLocating] = useState(false);
+  const [marker, setMarker] = useState<LatLngLiteral | null>(
+    latitude != null && longitude != null ? { lat: latitude, lng: longitude } : null,
+  );
 
-        // Update marker if props change
-        if (latitude && longitude) {
-            updateMarker(latitude, longitude);
-            // Only fly to location if it's significantly different to avoid jitter
-            const currentCenter = mapInstanceRef.current?.getCenter();
-            if (currentCenter) {
-                const dist = currentCenter.distanceTo([latitude, longitude]);
-                if (dist > 100) { // Only move if > 100m away
-                    mapInstanceRef.current?.setView([latitude, longitude], 15);
-                }
-            } else {
-                mapInstanceRef.current?.setView([latitude, longitude], 15);
-            }
-        }
+  useEffect(() => {
+    if (latitude != null && longitude != null) {
+      setMarker({ lat: latitude, lng: longitude });
+    }
+  }, [latitude, longitude]);
 
-        return () => {
-            // Cleanup is handled by React unmount usually, but Leaflet instances should be managed carefully.
-            // We keep the instance alive to avoid re-initialization issues during re-renders.
-        };
-    }, [latitude, longitude]); // Re-run when props change
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
 
-    const updateMarker = (lat: number, lng: number) => {
-        if (!mapInstanceRef.current) return;
-
-        if (!markerRef.current) {
-            const customIcon = L.divIcon({
-                className: 'custom-location-marker',
-                html: `<div style="background-color: #ef4444; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 4px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;">
-          <div style="transform: rotate(45deg); color: white; font-size: 18px;">📍</div>
-        </div>`,
-                iconSize: [40, 40],
-                iconAnchor: [20, 40],
-                popupAnchor: [0, -40],
-            });
-
-            markerRef.current = L.marker([lat, lng], { icon: customIcon, draggable: true })
-                .addTo(mapInstanceRef.current);
-
-            // Handle drag end
-            markerRef.current.on('dragend', (event) => {
-                const marker = event.target;
-                const position = marker.getLatLng();
-                onLocationSelect(position.lat, position.lng);
-            });
-        } else {
-            markerRef.current.setLatLng([lat, lng]);
-        }
-    };
-
-    const handleDetectLocation = () => {
-        if (!navigator.geolocation) {
-            toast.error('Geolocation is not supported by your browser');
-            return;
-        }
-
-        setIsLocating(true);
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude: lat, longitude: lon } = position.coords;
-                updateMarker(lat, lon);
-                onLocationSelect(lat, lon);
-                mapInstanceRef.current?.setView([lat, lon], 16);
-                setIsLocating(false);
-                toast.success('Location detected!');
-            },
-            (error) => {
-                console.error('Geolocation error:', error);
-                toast.error('Failed to detect location. Please pick manually on the map.');
-                setIsLocating(false);
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
-    };
-
-    return (
-        <div className="space-y-2">
-            <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Pin your exact delivery location</label>
-                <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDetectLocation}
-                    disabled={isLocating}
-                    className="h-8 text-xs"
-                >
-                    <Navigation className={`h-3 w-3 mr-1 ${isLocating ? 'animate-spin' : ''}`} />
-                    {isLocating ? 'Locating...' : 'Detect My Location'}
-                </Button>
-            </div>
-
-            <div className="relative border rounded-md overflow-hidden shadow-sm">
-                <div
-                    ref={mapRef}
-                    style={{
-                        height: `${height}px`,
-                        width: '100%',
-                        zIndex: 0
-                    }}
-                />
-                {!latitude && !longitude && (
-                    <div className="absolute inset-0 bg-black/5 pointer-events-none flex items-center justify-center z-[400]">
-                        <div className="bg-background/90 backdrop-blur px-4 py-2 rounded-full shadow-lg text-sm font-medium text-muted-foreground">
-                            Click map to set location
-                        </div>
-                    </div>
-                )}
-            </div>
-            <p className="text-xs text-muted-foreground">
-                * Drag the pin or click on the map to set the exact delivery spot.
-            </p>
-        </div>
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const next = { lat, lng };
+        setMarker(next);
+        onLocationSelect(lat, lng);
+        setIsLocating(false);
+        toast.success("Current location set!");
+      },
+      (err) => {
+        console.error("Geolocation error:", err);
+        toast.error("Failed to get current location. Please choose on the map.");
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
     );
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="text-sm font-medium">Pin your exact delivery location</label>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleUseCurrentLocation}
+          disabled={isLocating}
+          className="h-8 text-xs"
+        >
+          <Navigation className={`h-3 w-3 mr-1 ${isLocating ? "animate-spin" : ""}`} />
+          {isLocating ? "Locating..." : "Use Current Location"}
+        </Button>
+      </div>
+
+      <div className="relative border rounded-md overflow-hidden shadow-sm">
+        <MapContainer
+          center={marker ?? defaultCenter}
+          zoom={marker ? 16 : 5}
+          style={{ width: "100%", height: `${height}px` }}
+          scrollWheelZoom
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <InternalInteractiveLayer marker={marker} setMarker={setMarker} onLocationSelect={onLocationSelect} />
+        </MapContainer>
+
+        {!marker && (
+          <div className="absolute inset-0 bg-black/5 pointer-events-none flex items-center justify-center">
+            <div className="bg-background/90 backdrop-blur px-4 py-2 rounded-full shadow-lg text-sm font-medium text-muted-foreground">
+              Click map to set location
+            </div>
+          </div>
+        )}
+      </div>
+
+      <p className="text-xs text-muted-foreground">* Drag the pin or click on the map to set the exact delivery spot.</p>
+    </div>
+  );
 };

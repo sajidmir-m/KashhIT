@@ -117,9 +117,15 @@ const Cart = () => {
               {cartItems.map((item) => (
                 <Card key={item.id} className="p-3 sm:p-4 md:p-6">
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <div className="w-full sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-card rounded flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0">
-                      {item.products.image_url ? (
-                        <img src={item.products.image_url} alt={item.products.name} className="object-cover w-full h-full rounded" />
+                    <div className="w-full sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-card rounded flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0 overflow-hidden">
+                      {item.products.main_image_url || item.products.image_url ? (
+                        <img
+                          src={item.products.main_image_url || item.products.image_url}
+                          alt={item.products.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="object-cover w-full h-full"
+                        />
                       ) : (
                         <ShoppingCart className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground/50" />
                       )}

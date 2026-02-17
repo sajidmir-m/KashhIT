@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,6 +17,7 @@ import { lookupPincode, isValidPincode } from '@/lib/pincodeLookup';
 import { PincodeMap } from '@/components/PincodeMap';
 import { AddressForm } from '@/components/AddressForm';
 import { CouponInput } from '@/components/CouponInput';
+import { reverseGeocodeOSM } from '@/lib/reverseGeocode';
 
 // Declare Razorpay types
 declare global {
@@ -47,6 +48,8 @@ const Checkout = () => {
   const [recipientAddress, setRecipientAddress] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
   const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(null);
+  const [altLocationLocked, setAltLocationLocked] = useState(false);
+  const altReverseTimeoutRef = useRef<number | null>(null);
 
   const buyNowItems = (location.state as any)?.buyNow as Array<{ product: { id: string; name: string; price: number }, quantity: number }> | undefined;
 
@@ -93,6 +96,7 @@ const Checkout = () => {
     if (!isForSomeoneElse) {
       setAltPincode('');
       setPincodeData(null);
+      setAltLocationLocked(false);
       return;
     }
 
@@ -117,9 +121,11 @@ const Checkout = () => {
               state: data.state,
             });
             
-            // Auto-set coordinates from pincode
-            setAltLat(data.latitude);
-            setAltLon(data.longitude);
+            // Auto-set coordinates from pincode (but don't override an exact pin)
+            if (!altLocationLocked) {
+              setAltLat(data.latitude);
+              setAltLon(data.longitude);
+            }
             setAltConfirmed(false);
             
             toast.success(`Location found for pincode ${pincode}`);
@@ -140,7 +146,41 @@ const Checkout = () => {
       const timeoutId = setTimeout(lookupPincodeData, 800);
       return () => clearTimeout(timeoutId);
     }
-  }, [altPincode, isForSomeoneElse]);
+  }, [altPincode, isForSomeoneElse, altLocationLocked]);
+
+  // Reverse-geocode alt pin (order for someone else) to fill address/pincode
+  useEffect(() => {
+    if (!isForSomeoneElse) return;
+    if (!altLocationLocked) return;
+    if (altLat == null || altLon == null) return;
+
+    if (altReverseTimeoutRef.current) {
+      window.clearTimeout(altReverseTimeoutRef.current);
+    }
+
+    altReverseTimeoutRef.current = window.setTimeout(async () => {
+      try {
+        const res = await reverseGeocodeOSM(altLat, altLon);
+        if (!res) return;
+
+        if (!recipientAddress.trim() && res.displayName) {
+          setRecipientAddress(res.displayName);
+        }
+        if (!isValidPincode(altPincode) && res.pincode) {
+          setAltPincode(res.pincode);
+        }
+      } catch (e) {
+        console.warn('Reverse geocode (alt) failed', e);
+      }
+    }, 700);
+
+    return () => {
+      if (altReverseTimeoutRef.current) {
+        window.clearTimeout(altReverseTimeoutRef.current);
+        altReverseTimeoutRef.current = null;
+      }
+    };
+  }, [altLat, altLon, altLocationLocked, isForSomeoneElse]);
 
   // Load Razorpay script
   useEffect(() => {
@@ -872,6 +912,7 @@ const Checkout = () => {
                         value={altPincode}
                         onChange={(e) => {
                           const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                          setAltLocationLocked(false); // allow map to follow pincode center if user edits pincode
                           setAltPincode(value);
                         }}
                         maxLength={6}
@@ -920,10 +961,11 @@ const Checkout = () => {
                         try {
                           const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
                             if (!navigator.geolocation) return reject(new Error('Geolocation not supported'));
-                            navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
+                            navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
                           });
                           const lat = pos.coords.latitude;
                           const lon = pos.coords.longitude;
+                          setAltLocationLocked(true);
                           setAltLat(lat);
                           setAltLon(lon);
                           setAltConfirmed(false);
@@ -933,7 +975,7 @@ const Checkout = () => {
                         }
                       }}
                     >
-                      Use My Location
+                      Use Current Location
                     </Button>
                     <Button
                       size="sm"
@@ -955,6 +997,7 @@ const Checkout = () => {
                       height={260}
                       selected={altLat != null && altLon != null ? { lat: altLat, lon: altLon } : undefined}
                       onSelect={(coords) => {
+                        setAltLocationLocked(true);
                         setAltLat(coords.lat);
                         setAltLon(coords.lon);
                         setAltConfirmed(false);

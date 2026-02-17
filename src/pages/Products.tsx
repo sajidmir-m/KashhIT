@@ -173,38 +173,6 @@ const Products = () => {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onAdd={() => {}} // Handled by CartButton
-                    onBuyNow={async (productData: any, quantity?: number) => {
-                      if (!user) {
-                        toast.error('Please login to continue');
-                        navigate('/auth');
-                        return;
-                      }
-                      
-                      // Ensure product is in cart
-                      const { data: cartItem } = await supabase
-                        .from('cart_items')
-                        .select('quantity')
-                        .eq('user_id', user.id)
-                        .eq('product_id', productData.id)
-                        .maybeSingle();
-
-                      const finalQuantity = quantity || cartItem?.quantity || 1;
-                      
-                      navigate('/checkout', {
-                        state: {
-                          buyNow: [{
-                            product: {
-                              id: productData.id,
-                              name: productData.name,
-                              price: productData.price,
-                            },
-                            quantity: finalQuantity,
-                          }],
-                        },
-                      });
-                    }}
-                    user={user}
                     navigate={navigate}
                   />
                 ))}
@@ -220,7 +188,7 @@ const Products = () => {
   );
 };
 
-const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: any; onAdd: () => void; onBuyNow?: (product: any, quantity?: number) => void; user: any; navigate: any }) => {
+const ProductCard = ({ product, navigate }: { product: any; navigate: any }) => {
   const [gallery, setGallery] = useState<Array<string> | null>(null);
   const cartQuantity = useCartQuantity(product.id);
   const unitPrice = parseFloat(product.price) || 0;
@@ -271,54 +239,6 @@ const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: an
     navigate(`/products/${product.id}`);
   };
 
-  const handleBuyNow = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!onBuyNow || !user) {
-      if (!user) {
-        toast.error('Please login to continue');
-        navigate('/auth');
-      }
-      return;
-    }
-
-    // Get current cart quantity
-    const { data: cartItem } = await supabase
-      .from('cart_items')
-      .select('quantity')
-      .eq('user_id', user.id)
-      .eq('product_id', product.id)
-      .maybeSingle();
-
-    const quantity = cartItem?.quantity || 1;
-    
-    // If not in cart, add it first
-    if (!cartItem || cartItem.quantity === 0) {
-      const { data: existing } = await supabase
-        .from('cart_items')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('product_id', product.id)
-        .maybeSingle();
-      
-      if (existing) {
-        await supabase
-          .from('cart_items')
-          .update({ quantity: 1 })
-          .eq('id', existing.id);
-      } else {
-        await supabase
-          .from('cart_items')
-          .insert({
-            user_id: user.id,
-            product_id: product.id,
-            quantity: 1,
-          });
-      }
-    }
-
-    onBuyNow(product, cartItem?.quantity || 1);
-  };
-  
   return (
     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col border border-gray-200 group relative bg-white rounded-lg">
       {/* Image Section - Fixed Height */}
@@ -388,13 +308,6 @@ const ProductCard = ({ product, onAdd, onBuyNow, user, navigate }: { product: an
               showLabel={true}
             />
           </div>
-          <Button
-            variant="default"
-            className="flex-1 h-8 sm:h-9 text-[10px] xs:text-xs sm:text-sm bg-emerald-500 hover:bg-emerald-600 text-white min-w-0 px-1.5 sm:px-2.5 whitespace-nowrap"
-            onClick={handleBuyNow}
-          >
-            Buy Now
-          </Button>
         </div>
       </CardFooter>
     </Card>

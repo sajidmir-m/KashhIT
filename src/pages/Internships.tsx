@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,12 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { 
-  Code, 
-  Server, 
-  Smartphone, 
-  Cloud, 
-  Database, 
-  Brain,
+  Code,
   Send,
   CheckCircle2,
   X,
@@ -22,15 +17,10 @@ import {
   GraduationCap,
   Briefcase,
   Calendar,
-  Mail,
-  Phone,
-  MapPin,
   FileText,
   Terminal,
   Shield,
-  Lock,
   Zap,
-  Cpu,
   Eye,
   Clock,
   Building2
@@ -38,297 +28,7 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
-
-interface InternshipType {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  duration: string;
-  durationMonths: number;
-  skills: string[];
-  color: string;
-  terminalColor: string;
-  provider: string;
-  whatToDo: string[];
-  responsibilities: string[];
-  learningOutcomes: string[];
-}
-
-const internshipTypes: InternshipType[] = [
-  {
-    id: 'frontend',
-    title: 'Frontend Development',
-    description: 'Build modern, responsive user interfaces using React, Vue, Angular, and modern CSS frameworks.',
-    icon: <Code className="h-8 w-8" />,
-    duration: '3-6 months',
-    durationMonths: 6,
-    skills: ['React', 'Vue.js', 'Angular', 'TypeScript', 'HTML/CSS', 'Tailwind CSS'],
-    color: 'text-cyan-400',
-    terminalColor: 'border-cyan-500/50 bg-cyan-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Develop responsive web applications using React, Vue.js, or Angular',
-      'Implement modern UI/UX designs with CSS frameworks like Tailwind CSS',
-      'Build reusable component libraries and design systems',
-      'Optimize applications for performance and accessibility',
-      'Collaborate with designers and backend developers',
-      'Write clean, maintainable code following best practices'
-    ],
-    responsibilities: [
-      'Create pixel-perfect UI components from design mockups',
-      'Implement responsive designs for mobile, tablet, and desktop',
-      'Debug and fix frontend issues and bugs',
-      'Participate in code reviews and team meetings',
-      'Stay updated with latest frontend technologies and trends'
-    ],
-    learningOutcomes: [
-      'Master modern JavaScript frameworks and libraries',
-      'Understand component-based architecture',
-      'Learn state management and routing',
-      'Gain experience with build tools and bundlers',
-      'Develop portfolio-worthy projects'
-    ]
-  },
-  {
-    id: 'backend',
-    title: 'Backend Development',
-    description: 'Develop robust server-side applications, APIs, and databases using Node.js, Python, Java.',
-    icon: <Server className="h-8 w-8" />,
-    duration: '3-6 months',
-    durationMonths: 6,
-    skills: ['Node.js', 'Python', 'Java', 'REST APIs', 'PostgreSQL', 'MongoDB'],
-    color: 'text-green-400',
-    terminalColor: 'border-green-500/50 bg-green-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Design and develop RESTful APIs and GraphQL endpoints',
-      'Build scalable server-side applications using Node.js, Python, or Java',
-      'Work with databases (PostgreSQL, MongoDB) and optimize queries',
-      'Implement authentication, authorization, and security best practices',
-      'Create microservices and handle system architecture',
-      'Write unit tests and integration tests for backend services'
-    ],
-    responsibilities: [
-      'Develop and maintain backend services and APIs',
-      'Optimize database queries and improve performance',
-      'Implement security measures and handle data validation',
-      'Collaborate with frontend team to integrate APIs',
-      'Document API endpoints and technical specifications'
-    ],
-    learningOutcomes: [
-      'Master server-side programming languages and frameworks',
-      'Understand database design and optimization',
-      'Learn API design principles and best practices',
-      'Gain experience with cloud services and deployment',
-      'Develop secure and scalable backend systems'
-    ]
-  },
-  {
-    id: 'fullstack',
-    title: 'Full Stack Development',
-    description: 'Master both frontend and backend technologies to build complete web applications from scratch.',
-    icon: <Database className="h-8 w-8" />,
-    duration: '6-12 months',
-    durationMonths: 12,
-    skills: ['React', 'Node.js', 'PostgreSQL', 'TypeScript', 'AWS', 'Docker'],
-    color: 'text-emerald-400',
-    terminalColor: 'border-emerald-500/50 bg-emerald-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Build end-to-end web applications from design to deployment',
-      'Develop both frontend interfaces and backend APIs',
-      'Design and implement database schemas and models',
-      'Deploy applications to cloud platforms (AWS, Vercel, etc.)',
-      'Implement authentication, payment gateways, and third-party integrations',
-      'Work on real-world projects with full development lifecycle'
-    ],
-    responsibilities: [
-      'Develop complete features from frontend to backend',
-      'Write clean, maintainable, and well-documented code',
-      'Participate in agile development processes',
-      'Debug and troubleshoot issues across the stack',
-      'Collaborate with team members and stakeholders'
-    ],
-    learningOutcomes: [
-      'Become proficient in both frontend and backend technologies',
-      'Understand full-stack architecture and design patterns',
-      'Learn DevOps and deployment practices',
-      'Gain experience with version control and collaboration tools',
-      'Build production-ready applications for your portfolio'
-    ]
-  },
-  {
-    id: 'mobile',
-    title: 'Mobile App Development',
-    description: 'Create cross-platform mobile applications using React Native, Flutter, and native development.',
-    icon: <Smartphone className="h-8 w-8" />,
-    duration: '3-6 months',
-    durationMonths: 6,
-    skills: ['React Native', 'Flutter', 'iOS', 'Android', 'Firebase', 'Redux'],
-    color: 'text-yellow-400',
-    terminalColor: 'border-yellow-500/50 bg-yellow-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Develop cross-platform mobile applications using React Native or Flutter',
-      'Build native iOS and Android apps using Swift/Kotlin',
-      'Implement mobile UI/UX designs and animations',
-      'Integrate APIs, push notifications, and third-party services',
-      'Work with mobile databases and local storage',
-      'Test apps on various devices and handle platform-specific issues'
-    ],
-    responsibilities: [
-      'Design and develop mobile app features and screens',
-      'Implement responsive layouts for different screen sizes',
-      'Optimize app performance and battery usage',
-      'Handle app store submissions and updates',
-      'Debug and fix mobile-specific issues'
-    ],
-    learningOutcomes: [
-      'Master mobile app development frameworks',
-      'Understand mobile UI/UX principles',
-      'Learn app deployment and distribution',
-      'Gain experience with mobile testing and debugging',
-      'Build apps ready for app store release'
-    ]
-  },
-  {
-    id: 'devops',
-    title: 'DevOps & Cloud',
-    description: 'Learn cloud infrastructure, CI/CD pipelines, containerization, and automation tools.',
-    icon: <Cloud className="h-8 w-8" />,
-    duration: '3-6 months',
-    durationMonths: 6,
-    skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform', 'Linux'],
-    color: 'text-blue-400',
-    terminalColor: 'border-blue-500/50 bg-blue-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Set up and manage cloud infrastructure on AWS, Azure, or GCP',
-      'Create and maintain CI/CD pipelines using GitHub Actions, Jenkins, or GitLab',
-      'Containerize applications using Docker and orchestrate with Kubernetes',
-      'Automate infrastructure provisioning using Terraform or CloudFormation',
-      'Monitor applications and infrastructure using logging and monitoring tools',
-      'Implement security best practices and manage access controls'
-    ],
-    responsibilities: [
-      'Maintain and optimize cloud infrastructure',
-      'Automate deployment and scaling processes',
-      'Monitor system performance and troubleshoot issues',
-      'Implement backup and disaster recovery strategies',
-      'Document infrastructure and deployment procedures'
-    ],
-    learningOutcomes: [
-      'Master cloud platforms and services',
-      'Understand containerization and orchestration',
-      'Learn infrastructure as code principles',
-      'Gain experience with CI/CD and automation',
-      'Develop skills in system monitoring and troubleshooting'
-    ]
-  },
-  {
-    id: 'data-science',
-    title: 'Data Science & AI',
-    description: 'Explore machine learning, data analysis, AI models, and data visualization techniques.',
-    icon: <Brain className="h-8 w-8" />,
-    duration: '6-12 months',
-    durationMonths: 12,
-    skills: ['Python', 'Machine Learning', 'TensorFlow', 'Pandas', 'SQL', 'Data Visualization'],
-    color: 'text-purple-400',
-    terminalColor: 'border-purple-500/50 bg-purple-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Analyze large datasets and extract meaningful insights',
-      'Build and train machine learning models using Python libraries',
-      'Create data visualizations and dashboards',
-      'Implement AI solutions for real-world problems',
-      'Work with NLP, computer vision, or predictive analytics',
-      'Clean, preprocess, and transform data for analysis'
-    ],
-    responsibilities: [
-      'Collect and analyze data from various sources',
-      'Develop and evaluate machine learning models',
-      'Create reports and visualizations for stakeholders',
-      'Optimize models for performance and accuracy',
-      'Stay updated with latest AI/ML research and tools'
-    ],
-    learningOutcomes: [
-      'Master data analysis and visualization tools',
-      'Understand machine learning algorithms and techniques',
-      'Learn to build and deploy ML models',
-      'Gain experience with big data technologies',
-      'Develop AI solutions for practical applications'
-    ]
-  },
-  {
-    id: 'cybersecurity',
-    title: 'Cybersecurity & Ethical Hacking',
-    description: 'Master security protocols, penetration testing, vulnerability assessment, and ethical hacking techniques.',
-    icon: <Shield className="h-8 w-8" />,
-    duration: '6-12 months',
-    durationMonths: 12,
-    skills: ['Kali Linux', 'Penetration Testing', 'Network Security', 'Cryptography', 'OWASP', 'Forensics'],
-    color: 'text-red-400',
-    terminalColor: 'border-red-500/50 bg-red-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Perform security assessments and penetration testing',
-      'Identify and exploit vulnerabilities in web applications and networks',
-      'Implement security measures and best practices',
-      'Conduct security audits and risk assessments',
-      'Work with security tools like Burp Suite, Metasploit, and Wireshark',
-      'Learn about cryptography, network security, and incident response'
-    ],
-    responsibilities: [
-      'Conduct security testing and vulnerability assessments',
-      'Document security findings and provide remediation recommendations',
-      'Implement security controls and monitoring systems',
-      'Respond to security incidents and threats',
-      'Stay updated with latest security threats and countermeasures'
-    ],
-    learningOutcomes: [
-      'Master ethical hacking and penetration testing',
-      'Understand security protocols and best practices',
-      'Learn to identify and mitigate vulnerabilities',
-      'Gain experience with security tools and frameworks',
-      'Develop skills in cybersecurity and threat analysis'
-    ]
-  },
-  {
-    id: 'iot',
-    title: 'IoT Development',
-    description: 'Build Internet of Things solutions, work with sensors, microcontrollers, and embedded systems.',
-    icon: <Cpu className="h-8 w-8" />,
-    duration: '6-12 months',
-    durationMonths: 12,
-    skills: ['Arduino', 'Raspberry Pi', 'ESP32', 'MQTT', 'Python', 'Embedded C'],
-    color: 'text-orange-400',
-    terminalColor: 'border-orange-500/50 bg-orange-500/5',
-    provider: 'kaash.IT',
-    whatToDo: [
-      'Develop IoT solutions using Arduino, Raspberry Pi, and ESP32',
-      'Work with sensors, actuators, and microcontrollers',
-      'Build IoT applications for smart homes, agriculture, and industrial automation',
-      'Implement MQTT protocols and cloud connectivity',
-      'Create embedded systems and firmware development',
-      'Integrate hardware with software applications and cloud services'
-    ],
-    responsibilities: [
-      'Design and develop IoT hardware and software solutions',
-      'Program microcontrollers and work with sensor data',
-      'Build and test IoT prototypes and proof of concepts',
-      'Integrate IoT devices with cloud platforms',
-      'Troubleshoot hardware and software issues'
-    ],
-    learningOutcomes: [
-      'Master IoT hardware and embedded systems',
-      'Understand sensor integration and data collection',
-      'Learn cloud connectivity and MQTT protocols',
-      'Gain experience with microcontroller programming',
-      'Build complete IoT solutions from hardware to cloud'
-    ]
-  }
-];
+import { getInternshipProgram, internshipPrograms, type InternshipProgram } from '@/lib/internships';
 
 interface ApplicationFormData {
   fullName: string;
@@ -343,6 +43,8 @@ interface ApplicationFormData {
   coverLetter: string;
   availability: string;
   previousExperience: string;
+  durationPreference: string;
+  resumeUrl: string;
 }
 
 // Terminal typing animation component
@@ -478,11 +180,10 @@ const GlitchText = ({ children, className = '' }: { children: React.ReactNode; c
 
 const Internships = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
-  const [selectedInternship, setSelectedInternship] = useState<InternshipType | null>(null);
+  const [selectedInternship, setSelectedInternship] = useState<InternshipProgram | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-  const [selectedDetailsInternship, setSelectedDetailsInternship] = useState<InternshipType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [terminalCommand, setTerminalCommand] = useState('');
   const [showTerminal, setShowTerminal] = useState(true);
@@ -498,7 +199,9 @@ const Internships = () => {
     linkedin: '',
     coverLetter: '',
     availability: '',
-    previousExperience: ''
+    previousExperience: '',
+    durationPreference: '',
+    resumeUrl: '',
   });
   const [formData, setFormData] = useState<ApplicationFormData>(formDataRef.current);
 
@@ -533,7 +236,7 @@ const Internships = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleOpenDialog = (internship: InternshipType) => {
+  const handleOpenDialog = (internship: InternshipProgram) => {
     if (!user) {
       toast.error('Please login to apply for internships');
       navigate('/auth');
@@ -549,22 +252,19 @@ const Internships = () => {
     setFormData(formDataRef.current);
   };
 
-  const handleViewDetails = (internship: InternshipType) => {
-    setSelectedDetailsInternship(internship);
-    setIsDetailsDialogOpen(true);
-  };
+  // Deep-link support: /internships?apply=frontend
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const applyId = params.get('apply');
+    if (!applyId) return;
 
-  const handleCloseDetailsDialog = () => {
-    setIsDetailsDialogOpen(false);
-    setSelectedDetailsInternship(null);
-  };
-
-  const handleApplyFromDetails = () => {
-    if (selectedDetailsInternship) {
-      handleCloseDetailsDialog();
-      handleOpenDialog(selectedDetailsInternship);
+    const program = getInternshipProgram(applyId);
+    if (program) {
+      // Clear query param to prevent reopening on state changes
+      navigate('/internships', { replace: true });
+      handleOpenDialog(program);
     }
-  };
+  }, [location.search]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -586,15 +286,18 @@ const Internships = () => {
           portfolio_url: formData.portfolio,
           github_url: formData.github,
           linkedin_url: formData.linkedin,
+          resume_url: formData.resumeUrl,
           cover_letter: formData.coverLetter,
           availability: formData.availability,
           previous_experience: formData.previousExperience,
+          duration_preference: formData.durationPreference,
           status: 'pending'
         });
 
       if (error) {
-        if (error.code === '42P01') {
-          console.warn('Internship applications table not found, but application submitted locally');
+        // 42P01: table not found, 42703: column not found
+        if (error.code === '42P01' || error.code === '42703') {
+          console.warn('Internship applications schema mismatch, but application submitted locally', error);
         } else {
           throw error;
         }
@@ -674,7 +377,7 @@ const Internships = () => {
 
         {/* Internship Types Grid - Terminal Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {internshipTypes.map((internship, idx) => (
+          {internshipPrograms.map((internship, idx) => (
             <div
               key={internship.id}
               className={`border-2 ${internship.terminalColor} bg-black/70 backdrop-blur-sm rounded-lg p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(0,255,65,0.5)] hover:scale-105 hover:border-opacity-100 font-mono group relative overflow-hidden`}
@@ -683,7 +386,7 @@ const Internships = () => {
               }}
             >
               {/* Scanline effect */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               {/* Terminal prompt */}
               <div className="flex items-center gap-2 mb-3 text-xs text-green-400/60">
@@ -694,7 +397,7 @@ const Internships = () => {
 
               <div className="flex items-start justify-between mb-3">
                 <div className={`p-3 rounded-lg bg-black/50 border border-green-500/30 ${internship.color} group-hover:animate-pulse`}>
-                  {internship.icon}
+                  <internship.Icon className="h-8 w-8" />
                 </div>
                 <Badge className="bg-green-500/20 text-green-400 border-green-500/50 font-mono text-xs">
                   {internship.duration}
@@ -728,7 +431,7 @@ const Internships = () => {
                 <Button 
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleViewDetails(internship);
+                    navigate(`/internships/${internship.id}`);
                   }}
                   className="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/50 font-mono transition-all"
                 >
@@ -750,146 +453,6 @@ const Internships = () => {
           ))}
         </div>
 
-        {/* Details Dialog - Terminal Style */}
-        <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-black border-2 border-cyan-500/50 font-mono text-cyan-400">
-            <DialogHeader className="border-b border-cyan-500/30 pb-4">
-              <div className="flex items-center gap-2 text-xs text-cyan-400/60 mb-2">
-                <Terminal className="h-4 w-4" />
-                <span>root@kashit:~$ ./view_details.sh</span>
-                <span className="text-green-400">{selectedDetailsInternship?.id}</span>
-              </div>
-              <DialogTitle className="text-2xl flex items-center gap-2 text-cyan-400">
-                {selectedDetailsInternship?.icon}
-                <GlitchText className="text-cyan-400">{selectedDetailsInternship?.title.toUpperCase().replace(/\s+/g, '_')}</GlitchText>
-              </DialogTitle>
-              <DialogDescription className="text-cyan-300/70 font-mono">
-                {'>'} Complete internship program details and information.
-              </DialogDescription>
-            </DialogHeader>
-
-            {selectedDetailsInternship && (
-              <div className="space-y-6">
-                {/* Provider and Duration Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <div className="flex items-center gap-3">
-                    <Building2 className="h-5 w-5 text-cyan-400" />
-                    <div>
-                      <div className="text-xs text-cyan-400/60 font-mono">PROVIDER</div>
-                      <div className="text-lg font-semibold text-cyan-400">{selectedDetailsInternship.provider}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="h-5 w-5 text-cyan-400" />
-                    <div>
-                      <div className="text-xs text-cyan-400/60 font-mono">DURATION</div>
-                      <div className="text-lg font-semibold text-cyan-400">
-                        {selectedDetailsInternship.durationMonths} months ({selectedDetailsInternship.duration})
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <h3 className="text-lg font-semibold mb-3 text-cyan-400 flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    {'>'} DESCRIPTION
-                  </h3>
-                  <p className="text-cyan-300/80 font-mono">{selectedDetailsInternship.description}</p>
-                </div>
-
-                {/* What You'll Do */}
-                <div className="border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <h3 className="text-lg font-semibold mb-3 text-cyan-400 flex items-center gap-2">
-                    <Zap className="h-5 w-5" />
-                    {'>'} WHAT_YOU_WILL_DO
-                  </h3>
-                  <ul className="space-y-2">
-                    {selectedDetailsInternship.whatToDo.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-cyan-300/80 font-mono">
-                        <span className="text-cyan-400 mt-1">{'>'}</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Responsibilities */}
-                <div className="border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <h3 className="text-lg font-semibold mb-3 text-cyan-400 flex items-center gap-2">
-                    <Briefcase className="h-5 w-5" />
-                    {'>'} RESPONSIBILITIES
-                  </h3>
-                  <ul className="space-y-2">
-                    {selectedDetailsInternship.responsibilities.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-cyan-300/80 font-mono">
-                        <span className="text-cyan-400 mt-1">{'>'}</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Learning Outcomes */}
-                <div className="border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <h3 className="text-lg font-semibold mb-3 text-cyan-400 flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5" />
-                    {'>'} LEARNING_OUTCOMES
-                  </h3>
-                  <ul className="space-y-2">
-                    {selectedDetailsInternship.learningOutcomes.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-cyan-300/80 font-mono">
-                        <span className="text-cyan-400 mt-1">{'>'}</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Skills */}
-                <div className="border border-cyan-500/30 rounded-lg p-4 bg-black/50">
-                  <h3 className="text-lg font-semibold mb-3 text-cyan-400 flex items-center gap-2">
-                    <Code className="h-5 w-5" />
-                    {'>'} SKILLS_YOU_WILL_LEARN
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedDetailsInternship.skills.map((skill) => (
-                      <Badge
-                        key={skill}
-                        className="bg-black/50 text-cyan-400 border-cyan-500/30 font-mono text-sm hover:bg-cyan-500/20 transition-colors"
-                      >
-                        {'>'} {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <DialogFooter className="flex flex-col sm:flex-row gap-2 border-t border-cyan-500/30 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCloseDetailsDialog}
-                className="w-full sm:w-auto bg-black/50 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:border-red-500 font-mono"
-              >
-                <X className="h-4 w-4 mr-2" />
-                {'>'} CLOSE
-              </Button>
-              <Button
-                type="button"
-                onClick={handleApplyFromDetails}
-                disabled={!user}
-                className="w-full sm:w-auto bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/50 font-mono hover:shadow-[0_0_15px_rgba(0,255,65,0.5)]"
-              >
-                <Terminal className="h-4 w-4 mr-2" />
-                {'>'} APPLY_NOW
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
         {/* Application Dialog - Terminal Style */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border-2 border-green-500/50 font-mono text-green-400">
@@ -900,7 +463,7 @@ const Internships = () => {
                 <span className="text-cyan-400">{selectedInternship?.id}</span>
               </div>
               <DialogTitle className="text-2xl flex items-center gap-2 text-green-400">
-                {selectedInternship?.icon}
+                {selectedInternship ? <selectedInternship.Icon className="h-8 w-8" /> : null}
                 <GlitchText>APPLY_FOR_{selectedInternship?.title.toUpperCase().replace(/\s+/g, '_')}</GlitchText>
               </DialogTitle>
               <DialogDescription className="text-green-300/70 font-mono space-y-2">
@@ -908,11 +471,33 @@ const Internships = () => {
                 <div className="flex items-center gap-4 text-sm pt-2 border-t border-green-500/20">
                   <div className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-green-400" />
-                    <span className="text-green-400/80">Provider: <span className="text-green-400 font-semibold">{selectedInternship?.provider}</span></span>
+                    <span className="text-green-400/80">
+                      Provider:{' '}
+                      <span className="text-green-400 font-semibold">{selectedInternship?.provider}</span>
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-green-400" />
-                    <span className="text-green-400/80">Duration: <span className="text-green-400 font-semibold">{selectedInternship?.durationMonths} months</span></span>
+                    <span className="text-green-400/80">
+                      Duration:{' '}
+                      <span className="text-green-400 font-semibold">{selectedInternship?.duration || '3-4 months'}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-green-400" />
+                    <span className="text-green-400/80">
+                      Provider:{' '}
+                      <span className="text-green-400 font-semibold">{selectedInternship?.provider}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-green-400" />
+                    <span className="text-green-400/80">
+                      Duration:{' '}
+                      <span className="text-green-400 font-semibold">
+                        {selectedInternship?.duration || '3-4 months'} (3 or 4 months)
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <div>{'>'} We'll review your application and get back to you soon.</div>
@@ -954,7 +539,7 @@ const Internships = () => {
                 </div>
               </div>
 
-              {/* Portfolio & Links */}
+              {/* Portfolio, Resume & Links */}
               <div className="space-y-4 border border-green-500/30 rounded-lg p-4 bg-black/50">
                 <h3 className="font-semibold text-lg flex items-center gap-2 text-cyan-400">
                   <Code className="h-5 w-5" />
@@ -963,9 +548,10 @@ const Internships = () => {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { id: 'portfolio', label: 'Portfolio Website', placeholder: 'https://yourportfolio.com', required: false },
+                    { id: 'portfolio', label: 'Portfolio Website (optional)', placeholder: 'https://yourportfolio.com', required: false },
                     { id: 'github', label: 'GitHub Profile', placeholder: 'https://github.com/username', required: true },
-                    { id: 'linkedin', label: 'LinkedIn Profile', placeholder: 'https://linkedin.com/in/username', required: false, span: 2 },
+                    { id: 'linkedin', label: 'LinkedIn Profile (optional)', placeholder: 'https://linkedin.com/in/username', required: false },
+                    { id: 'resumeUrl', label: 'Resume (URL)', placeholder: 'https://drive.google.com/your-resume', required: true, span: 2 },
                   ].map((field) => (
                     <div key={field.id} className={`space-y-2 ${field.span === 2 ? 'sm:col-span-2' : ''}`}>
                       <Label htmlFor={field.id} className="text-green-400 font-mono text-sm">
@@ -1006,6 +592,23 @@ const Internships = () => {
                   />
                 </div>
                 
+                <div className="space-y-2">
+                  <Label htmlFor="durationPreference" className="text-green-400 font-mono text-sm">
+                    {'$'} Preferred Internship Duration *
+                  </Label>
+                  <select
+                    id="durationPreference"
+                    value={formData.durationPreference}
+                    onChange={(e) => setFormData({ ...formData, durationPreference: e.target.value })}
+                    required
+                    className="bg-black/50 border-green-500/50 text-green-400 font-mono text-sm rounded-md px-3 py-2 focus:border-green-500 focus:ring-green-500/50"
+                  >
+                    <option value="">Select duration</option>
+                    <option value="3 months">3 months</option>
+                    <option value="4 months">4 months</option>
+                  </select>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="availability" className="text-green-400 font-mono text-sm">
                     {'$'} Availability (Hours per week) *

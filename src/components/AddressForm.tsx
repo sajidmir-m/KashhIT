@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import {
   checkPincodeServiceability,
   type ServiceabilityResult,
 } from '@/lib/serviceAvailability';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 
 interface AddressFormData {
   label: string;
@@ -51,6 +52,9 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
   });
   const [isLookingUpPincode, setIsLookingUpPincode] = useState(false);
   const [serviceability, setServiceability] = useState<ServiceabilityResult | null>(null);
+  const [locationLocked, setLocationLocked] = useState(false);
+  const [isReverseGeocoding, setIsReverseGeocoding] = useState(false);
+  const reverseGeocodeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (address) {
@@ -65,6 +69,7 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
         latitude: address.latitude,
         longitude: address.longitude,
       });
+      setLocationLocked(!!(address.latitude && address.longitude));
     }
   }, [address]);
 
@@ -72,9 +77,11 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
   useEffect(() => {
     const pincode = formData.pincode.trim();
 
-    // Reset coordinates if pincode is cleared
+    // Reset coordinates if pincode is cleared (and user hasn't pinned an exact location)
     if (!pincode) {
-      setFormData(prev => ({ ...prev, latitude: undefined, longitude: undefined }));
+      if (!locationLocked) {
+        setFormData(prev => ({ ...prev, latitude: undefined, longitude: undefined }));
+      }
       setServiceability(null);
       return;
     }
@@ -100,8 +107,9 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
               ...prev,
               city: prev.city || data.city,
               state: prev.state || data.state,
-              latitude: data.latitude,
-              longitude: data.longitude,
+              // Don't override an exact GPS pin selected by the user
+              latitude: prev.latitude ?? data.latitude,
+              longitude: prev.longitude ?? data.longitude,
             }));
 
             toast.success(`Location found for pincode ${pincode}`);
@@ -120,7 +128,49 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
       const timeoutId = setTimeout(lookupPincodeData, 800);
       return () => clearTimeout(timeoutId);
     }
-  }, [formData.pincode]);
+  }, [formData.pincode, locationLocked]);
+
+  // Reverse-geocode pinned coordinates (exact location -> full address fields)
+  useEffect(() => {
+    if (!locationLocked) return;
+    const lat = formData.latitude;
+    const lon = formData.longitude;
+    if (lat == null || lon == null) return;
+
+    if (reverseGeocodeTimeoutRef.current) {
+      window.clearTimeout(reverseGeocodeTimeoutRef.current);
+    }
+
+    reverseGeocodeTimeoutRef.current = window.setTimeout(async () => {
+      setIsReverseGeocoding(true);
+      try {
+        const res = await reverseGeocode(lat, lon);
+        if (!res) return;
+
+        setFormData((prev) => ({
+          ...prev,
+          // Always prefer reverse-geocoded data when available so "Use Current Location"
+          // fully populates the address form for the user.
+          full_address: res.displayName || prev.full_address,
+          city: res.city || prev.city,
+          state: res.state || prev.state,
+          pincode: res.pincode || prev.pincode,
+        }));
+      } catch (e) {
+        // silent: location still saved; user can type manually
+        console.warn('Reverse geocode failed', e);
+      } finally {
+        setIsReverseGeocoding(false);
+      }
+    }, 700);
+
+    return () => {
+      if (reverseGeocodeTimeoutRef.current) {
+        window.clearTimeout(reverseGeocodeTimeoutRef.current);
+        reverseGeocodeTimeoutRef.current = null;
+      }
+    };
+  }, [formData.latitude, formData.longitude, locationLocked]);
 
   const saveAddress = useMutation({
     mutationFn: async (data: AddressFormData) => {
@@ -293,7 +343,8 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
                   onChange={(e) => {
                     // Only allow numbers and limit to 6 digits
                     const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                    setFormData(prev => ({ ...prev, pincode: value }));
+                  setLocationLocked(false); // allow map to follow pincode center if user edits pincode
+                  setFormData(prev => ({ ...prev, pincode: value }));
                   }}
                   maxLength={6}
                   required
@@ -345,11 +396,15 @@ export const AddressForm = ({ address, onSuccess, onCancel }: AddressFormProps) 
               latitude={formData.latitude}
               longitude={formData.longitude}
               onLocationSelect={(lat, lon) => {
+                setLocationLocked(true);
                 setFormData(prev => ({ ...prev, latitude: lat, longitude: lon }));
-                // Optional: Reverse geocode if address is empty? 
-                // For now we just trust the user to fill address or let pincode fill it.
               }}
             />
+            {isReverseGeocoding && (
+              <p className="text-xs text-muted-foreground">
+                Fetching address from your pinned location…
+              </p>
+            )}
 
             {formData.latitude && formData.longitude && (
               <div className="p-3 bg-muted rounded-md flex items-center gap-2">
