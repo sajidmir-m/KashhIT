@@ -46,7 +46,7 @@ const DeliveryDashboard = () => {
           <div className="max-w-xl p-6 border rounded-md">
             <p className="text-sm text-muted-foreground mb-4">Your account does not have the delivery partner role.</p>
             <div className="flex gap-2">
-              <a href="/delivery/register" className="px-3 py-2 border rounded text-sm">Apply as Delivery Partner</a>
+              <a href="/" className="px-3 py-2 border rounded text-sm">Contact Admin to enable Delivery access</a>
               <a href="/" className="px-3 py-2 border rounded text-sm">Go Home</a>
             </div>
           </div>
@@ -874,7 +874,7 @@ const AssignedRequests = () => {
       <div className="p-4 border rounded-md">
         <p className="text-sm text-muted-foreground">No delivery partner profile found for your account.</p>
         <div className="mt-2">
-          <a href="/delivery/register" className="px-3 py-2 border rounded text-sm">Apply as Delivery Partner</a>
+          <a href="/" className="px-3 py-2 border rounded text-sm">Contact Admin to enable Delivery access</a>
         </div>
       </div>
     );

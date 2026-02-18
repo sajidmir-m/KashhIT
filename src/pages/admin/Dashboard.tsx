@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Package, Store, Truck, Send, Ban, RefreshCcw, Check, Eye, UserCheck, Clock } from 'lucide-react';
+import { Users, Package, Store, Truck, Send, Ban, RefreshCcw, Check, Eye, UserCheck, Clock, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -93,15 +93,12 @@ const AdminDashboard = () => {
           <TabsContent value="delivery" className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="lg:col-span-1">
-                <DeliveryApplicationsList />
+                <CreateDeliveryPartnerForm />
               </Card>
               <Card className="lg:col-span-2">
-                <DeliveryApplicationsActions />
+                <DeliveryPartnersCrud />
               </Card>
             </div>
-            <Card>
-              <DeliveryPartnersCrud />
-            </Card>
           </TabsContent>
 
           <TabsContent value="products" className="space-y-4 sm:space-y-6">
@@ -1066,6 +1063,112 @@ const DeliveryApplicationsList = () => {
           ))}
         </div>
       )}
+    </CardContent>
+  );
+};
+
+const CreateDeliveryPartnerForm = () => {
+  const queryClient = useQueryClient();
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
+  const [vehicleNumber, setVehicleNumber] = useState('');
+  const [createdCreds, setCreatedCreds] = useState<{ email: string; password: string } | null>(null);
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const normalizedEmail = email.trim().toLowerCase();
+      if (!normalizedEmail) throw new Error('Email is required');
+
+      const { data, error } = await supabase.functions.invoke('create-delivery-partner', {
+        body: {
+          email: normalizedEmail,
+          full_name: fullName.trim() || null,
+          phone: phone.trim() || null,
+          vehicle_type: vehicleType.trim() || null,
+          vehicle_number: vehicleNumber.trim() || null,
+        },
+      });
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.error || 'Failed to create delivery partner');
+      if (!data?.password) {
+        // We still consider it success if email was sent but password not returned
+        return { email: normalizedEmail, password: '' };
+      }
+      return { email: normalizedEmail, password: data.password as string };
+    },
+    onSuccess: (creds) => {
+      toast.success('Delivery partner created and credentials sent to email!');
+      setCreatedCreds(creds.password ? creds : { email: creds.email, password: '(sent to email)' });
+      setEmail('');
+      setFullName('');
+      setPhone('');
+      setVehicleType('');
+      setVehicleNumber('');
+      queryClient.invalidateQueries({ queryKey: ['admin-delivery-count'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-delivery-partners-crud'] });
+    },
+    onError: (e: any) => toast.error(e?.message || 'Failed to create delivery partner'),
+  });
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreatedCreds(null);
+    createMutation.mutate();
+  };
+
+  return (
+    <CardContent>
+      <CardHeader className="p-0 mb-4">
+        <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
+          <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 text-primary" /> Add Delivery Partner
+        </CardTitle>
+      </CardHeader>
+
+      <form className="space-y-3 sm:space-y-4" onSubmit={onSubmit}>
+        <div className="space-y-2">
+          <label className="text-xs sm:text-sm font-medium">Delivery Partner Email *</label>
+          <Input type="email" placeholder="delivery@kasshit.in" value={email} onChange={(e) => setEmail(e.target.value)} required className="text-sm" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs sm:text-sm font-medium">Full Name</label>
+          <Input placeholder="Full name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="text-sm" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs sm:text-sm font-medium">Phone</label>
+          <Input type="tel" placeholder="+91XXXXXXXXXX" value={phone} onChange={(e) => setPhone(e.target.value)} className="text-sm" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <label className="text-xs sm:text-sm font-medium">Vehicle Type</label>
+            <Input placeholder="Bike / Scooter" value={vehicleType} onChange={(e) => setVehicleType(e.target.value)} className="text-sm" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs sm:text-sm font-medium">Vehicle Number</label>
+            <Input placeholder="JK01AB1234" value={vehicleNumber} onChange={(e) => setVehicleNumber(e.target.value)} className="text-sm" />
+          </div>
+        </div>
+
+        <div className="pt-2">
+          <Button type="submit" disabled={createMutation.isPending} className="w-full sm:w-auto text-sm">
+            {createMutation.isPending ? 'Creating…' : 'Create Delivery Account'}
+          </Button>
+        </div>
+
+        <p className="text-xs text-muted-foreground">
+          This will create/reset the delivery partner login and email the credentials. Login: `https://www.kasshit.in/auth`
+        </p>
+
+        {createdCreds && (
+          <div className="mt-3 rounded border p-3 text-xs sm:text-sm bg-muted/30">
+            <div className="font-semibold mb-1">Created Credentials</div>
+            <div><span className="text-muted-foreground">Email:</span> {createdCreds.email}</div>
+            <div><span className="text-muted-foreground">Password:</span> {createdCreds.password}</div>
+            <div className="text-muted-foreground mt-2">Share these with the delivery partner, or they can check their email.</div>
+          </div>
+        )}
+      </form>
     </CardContent>
   );
 };

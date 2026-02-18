@@ -394,11 +394,11 @@ const Home = () => {
                 <>
                   <h1 className="text-2xl xs:text-[28px] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-2 xs:mb-3 sm:mb-4 drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)] px-2">
                     <span className="text-black font-black">
-                      Live Better best
+                      Fresh Groceries Delivered in Minutes
                     </span>
                   </h1>
                   <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl mb-4 xs:mb-5 sm:mb-6 md:mb-8 text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.7),0_1px_2px_rgba(0,0,0,0.5)] max-w-2xl mx-auto px-2 xs:px-3">
-                    Discover quality products from trusted vendors. Fast delivery, secure payments, and unbeatable prices.
+                    India's trusted quick commerce platform. Get fresh groceries, daily essentials & household products delivered fast. Secure payments, quality assured, lightning-fast delivery.
                   </p>
                   <div className="flex flex-col xs:flex-row gap-2 xs:gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2 xs:px-3">
                     <Link to="/products" className="w-full xs:w-auto">
@@ -420,6 +420,124 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Features Section - SEO Optimized */}
+      {!isLoggedIn && (
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-emerald-50 to-white">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-3 sm:mb-4">
+                Why Choose Kasshit?
+              </h2>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Experience the future of grocery shopping with India's fastest quick commerce platform
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Zap className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Lightning Fast Delivery</h3>
+                  <p className="text-muted-foreground">
+                    Get your groceries delivered in minutes, not hours. Our optimized delivery network ensures fresh products reach you at lightning speed.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Shield className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Secure Payments</h3>
+                  <p className="text-muted-foreground">
+                    Shop with confidence using our secure payment gateway. Multiple payment options including UPI, cards, and cash on delivery.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Star className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Quality Assured</h3>
+                  <p className="text-muted-foreground">
+                    Every product is carefully selected and quality-checked. Fresh produce, authentic brands, and guaranteed satisfaction.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trust Building Section */}
+      {!isLoggedIn && (
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
+                  Trusted by Thousands of Customers
+                </h2>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Join India's growing community of satisfied customers who trust Kasshit for their daily grocery needs. We're committed to delivering excellence with every order.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Truck className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">Fast & Reliable Delivery</h4>
+                      <p className="text-muted-foreground text-sm">Average delivery time of 10-15 minutes in service areas</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Shield className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">100% Secure Transactions</h4>
+                      <p className="text-muted-foreground text-sm">Your payment information is encrypted and secure</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Star className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">Quality Guaranteed</h4>
+                      <p className="text-muted-foreground text-sm">Fresh products sourced directly from trusted suppliers</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-8 rounded-lg">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">10+</div>
+                    <div className="text-sm text-muted-foreground">Minutes Avg Delivery</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">1000+</div>
+                    <div className="text-sm text-muted-foreground">Products Available</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">24/7</div>
+                    <div className="text-sm text-muted-foreground">Customer Support</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">100%</div>
+                    <div className="text-sm text-muted-foreground">Secure Payments</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Offers Carousel */}
       <section className="px-2 sm:px-4 pt-2">
@@ -778,24 +896,29 @@ const Home = () => {
               <h3 className="font-semibold text-base sm:text-lg mb-3 sm:mb-4">Customer Service</h3>
               <ul className="space-y-1.5 sm:space-y-2">
                 <li>
+                  <Link to="/about" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
                   <Link to="/profile" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
                     My Profile
                   </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
-                    Help Center
-                  </a>
+                  <Link to="/refund-policy" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
+                    Help & Support
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
-                    Shipping Info
-                  </a>
+                  <Link to="/refund-policy" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
+                    Shipping & Returns
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
-                    Returns
-                  </a>
+                  <Link to="/internships" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
+                    Internships
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -841,6 +964,9 @@ const Home = () => {
                 </Link>
                 <Link to="/cookie-policy" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
                   Cookie Policy
+                </Link>
+                <Link to="/refund-policy" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
+                  Refund Policy
                 </Link>
               </div>
             </div>

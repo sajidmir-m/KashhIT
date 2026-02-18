@@ -25,6 +25,8 @@ import DeliveryRegister from "./pages/delivery/Register";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
+import About from "./pages/About";
+import RefundPolicy from "./pages/RefundPolicy";
 import SearchPage from "./pages/Search";
 import ExploreProjects from "./pages/ExploreProjects";
 import ProjectDetail from "./pages/ProjectDetail";
@@ -75,9 +77,11 @@ const App = () => (
               <Route path="/orders" element={<Orders />} />
               <Route path="/internships" element={<Internships />} />
               <Route path="/internships/:id" element={<InternshipDetail />} />
+              <Route path="/about" element={<About />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/admin/*" element={<AdminDashboard />} />
               <Route path="/vendor/*" element={<VendorDashboard />} />
               <Route path="/delivery/*" element={<DeliveryDashboard />} />

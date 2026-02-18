@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { getInternshipProgram, internshipPrograms, type InternshipProgram } from '@/lib/internships';
+import { SEOHead } from '@/components/SEOHead';
 
 interface ApplicationFormData {
   fullName: string;
@@ -315,6 +316,12 @@ const Internships = () => {
 
   return (
     <div className="min-h-screen bg-black text-green-400 relative overflow-hidden">
+      <SEOHead
+        title="Internship Programs - Software & Hardware Development | Kasshit"
+        description="Join Kasshit's internship programs in Frontend, Backend, Full Stack, Mobile, DevOps, Data Science, Cybersecurity, and IoT Development. Gain hands-on experience with real projects."
+        keywords="internship programs, software development internship, hardware internship, frontend development, backend development, full stack internship, mobile app development, DevOps internship, data science internship, cybersecurity internship, IoT internship"
+        canonical="https://www.kasshit.in/internships"
+      />
       <MatrixRain />
       <Navbar />
       
