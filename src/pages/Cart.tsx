@@ -115,35 +115,39 @@ const Cart = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-2 space-y-3 sm:space-y-4 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {cartItems.map((item) => (
-                <Card key={item.id} className="p-3 sm:p-4 md:p-6">
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <div className="w-full sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-card rounded flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0 overflow-hidden">
+                <Card key={item.id} className="p-3 sm:p-4 md:p-6 hover:shadow-lg transition-shadow duration-300 border-2 border-transparent hover:border-primary/20">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-4">
+                    {/* Mobile: Large Product Image Card */}
+                    <div className="w-full sm:w-24 sm:h-24 md:w-28 md:h-28 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md sm:shadow-sm border border-gray-200/50">
                       {item.products.main_image_url || item.products.image_url ? (
                         <img
                           src={item.products.main_image_url || item.products.image_url}
                           alt={item.products.name}
                           loading="lazy"
                           decoding="async"
-                          className="object-cover w-full h-full"
+                          className="object-cover w-full h-full sm:rounded-lg"
                         />
                       ) : (
-                        <ShoppingCart className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground/50" />
+                        <ShoppingCart className="h-12 w-12 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground/50" />
                       )}
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-base sm:text-lg mb-1 break-words">{item.products.name}</h3>
-                      <p className="text-muted-foreground text-xs sm:text-sm mb-2">₹{item.products.price} per {item.products.unit}</p>
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg sm:text-lg mb-1.5 break-words leading-tight">{item.products.name}</h3>
+                        <p className="text-muted-foreground text-sm sm:text-sm mb-3">₹{item.products.price} per {item.products.unit}</p>
+                      </div>
                       
+                      {/* Mobile: Better Layout for Controls */}
                       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 justify-center sm:justify-start">
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => updateQuantityMutation.mutate({ id: item.id, quantity: item.quantity - 1 })}
-                            className="h-8 w-8 p-0"
+                            className="h-9 w-9 p-0 rounded-full border-2 hover:bg-primary/10 hover:border-primary"
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-4 w-4" />
                           </Button>
                           <Input
                             type="number"
@@ -152,28 +156,28 @@ const Cart = () => {
                               const val = parseInt(e.target.value) || 0;
                               updateQuantityMutation.mutate({ id: item.id, quantity: Math.max(0, Math.min(item.products.stock, val)) });
                             }}
-                            className="w-12 sm:w-16 text-center text-xs sm:text-sm"
+                            className="w-16 sm:w-16 text-center text-sm font-semibold border-2"
                           />
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => updateQuantityMutation.mutate({ id: item.id, quantity: Math.min(item.products.stock, item.quantity + 1) })}
                             disabled={item.quantity >= item.products.stock}
-                            className="h-8 w-8 p-0"
+                            className="h-9 w-9 p-0 rounded-full border-2 hover:bg-primary/10 hover:border-primary disabled:opacity-50"
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-4 w-4" />
                           </Button>
                         </div>
                         
-                        <div className="flex items-center justify-between sm:justify-end gap-2">
-                          <span className="font-bold text-base sm:text-lg">₹{(item.products.price * item.quantity).toFixed(2)}</span>
+                        <div className="flex items-center justify-between sm:justify-end gap-3 bg-gray-50 sm:bg-transparent p-2 sm:p-0 rounded-lg sm:rounded-none">
+                          <span className="font-bold text-lg sm:text-lg text-primary">₹{(item.products.price * item.quantity).toFixed(2)}</span>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => removeItemMutation.mutate(item.id)}
-                            className="text-destructive hover:text-destructive h-8 w-8"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 h-9 w-9 rounded-full"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-5 w-5" />
                           </Button>
                         </div>
                       </div>

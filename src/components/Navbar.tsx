@@ -166,10 +166,10 @@ export const Navbar = () => {
         <div className="flex h-14 sm:h-16 md:h-18 items-center gap-2 sm:gap-3 md:gap-4 justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-            <img src="/logo.png" alt="KasshIT" className="h-7 w-7 sm:h-9 sm:w-9 md:h-10 md:w-10 object-contain" />
+            <img src="/logo.png" alt="Kassh.IT" className="h-7 w-7 sm:h-9 sm:w-9 md:h-10 md:w-10 object-contain" />
             <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold">
-              <span className="text-emerald-600">Kass</span>
-              <span className="text-green-600">hIT</span>
+              <span className="text-emerald-600">Kassh</span>
+              <span className="text-green-600">.IT</span>
             </span>
           </Link>
 

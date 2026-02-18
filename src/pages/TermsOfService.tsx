@@ -19,7 +19,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">1. Agreement to Terms</h2>
               <p className="text-muted-foreground leading-relaxed">
-                By accessing and using KasshIT ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. 
+                By accessing and using Kassh.IT ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
               </p>
             </section>
@@ -56,7 +56,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">4. Products and Orders</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                All products listed on KasshIT are subject to:
+                All products listed on Kassh.IT are subject to:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Availability - Products are subject to stock availability</li>
@@ -102,7 +102,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">8. Intellectual Property</h2>
               <p className="text-muted-foreground leading-relaxed">
-                All content on KasshIT, including text, graphics, logos, images, and software, is the property of KasshIT or its content suppliers 
+                All content on Kassh.IT, including text, graphics, logos, images, and software, is the property of Kassh.IT or its content suppliers 
                 and is protected by copyright and trademark laws. You may not reproduce, distribute, or create derivative works without permission.
               </p>
             </section>
@@ -118,7 +118,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">10. Limitation of Liability</h2>
               <p className="text-muted-foreground leading-relaxed">
-                To the maximum extent permitted by law, KasshIT shall not be liable for any indirect, incidental, special, consequential, 
+                To the maximum extent permitted by law, Kassh.IT shall not be liable for any indirect, incidental, special, consequential, 
                 or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, 
                 use, goodwill, or other intangible losses resulting from your use of the Service.
               </p>
@@ -127,7 +127,7 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">11. Indemnification</h2>
               <p className="text-muted-foreground leading-relaxed">
-                You agree to indemnify and hold harmless KasshIT, its officers, directors, employees, and agents from any claims, damages, 
+                You agree to indemnify and hold harmless Kassh.IT, its officers, directors, employees, and agents from any claims, damages, 
                 losses, liabilities, and expenses arising out of your use of the Service or violation of these Terms.
               </p>
             </section>
@@ -154,7 +154,7 @@ const TermsOfService = () => {
                 For questions about these Terms of Service, please contact us:
               </p>
               <div className="mt-3 space-y-1 text-muted-foreground">
-                <p><strong>Email:</strong> support@kasshit.com</p>
+                <p><strong>Email:</strong> kasshit_1@zohomail.com</p>
                 <p><strong>Phone:</strong> +91 123 456 7890</p>
                 <p><strong>Address:</strong> India</p>
               </div>

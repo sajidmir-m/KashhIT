@@ -323,7 +323,7 @@ const Internships = () => {
         <div className="mb-8 sm:mb-12 border border-green-500/50 bg-black/80 backdrop-blur-sm p-6 rounded-lg font-mono shadow-[0_0_20px_rgba(0,255,65,0.3)]">
           <div className="flex items-center gap-2 mb-4">
             <Terminal className="h-5 w-5 text-green-400 animate-pulse" />
-            <span className="text-green-400">root@kashit:~$</span>
+            <span className="text-green-400">root@kasshit:~$</span>
             <span className="text-green-300">{terminalCommand}</span>
             <span className="animate-blink">█</span>
           </div>
@@ -459,7 +459,7 @@ const Internships = () => {
             <DialogHeader className="border-b border-green-500/30 pb-4">
               <div className="flex items-center gap-2 text-xs text-green-400/60 mb-2">
                 <Terminal className="h-4 w-4" />
-                <span>root@kashit:~$ ./apply.sh</span>
+                <span>root@kasshit:~$ ./apply.sh</span>
                 <span className="text-cyan-400">{selectedInternship?.id}</span>
               </div>
               <DialogTitle className="text-2xl flex items-center gap-2 text-green-400">

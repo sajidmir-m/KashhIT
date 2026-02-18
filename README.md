@@ -1,8 +1,8 @@
-# Kash.it E‑Commerce
+# Kassh.IT E‑Commerce
 
 ## Project info
 
-Kash.it storefront built with Vite, React, TypeScript, Tailwind, shadcn/ui, and Supabase.
+Kassh.IT storefront built with Vite, React, TypeScript, Tailwind, shadcn/ui, and Supabase.
 
 ## How can I edit this code?
 

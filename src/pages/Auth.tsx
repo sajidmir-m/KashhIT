@@ -369,9 +369,9 @@ const Auth = () => {
         {/* Logo Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <img src="/logo.png" alt="Kash.it" className="h-12 w-12 object-contain" />
+            <img src="/logo.png" alt="Kassh.IT" className="h-12 w-12 object-contain" />
             <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
-              Kash.it
+              Kassh.IT
             </span>
           </div>
           <div className="flex items-center justify-center gap-2 text-sm text-gray-600">

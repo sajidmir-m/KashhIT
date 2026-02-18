@@ -91,7 +91,7 @@ const InternshipDetail = () => {
           <Card className="bg-black/70 border border-green-500/40 p-6 font-mono">
             <div className="flex items-center gap-3 mb-4">
               <Terminal className="h-5 w-5 text-green-400" />
-              <div className="text-green-400/80 text-sm">root@kashit:~$ ./internship_not_found.sh</div>
+              <div className="text-green-400/80 text-sm">root@kasshit:~$ ./internship_not_found.sh</div>
             </div>
             <div className="text-xl font-semibold text-green-400 mb-2">{">"} Internship not found</div>
             <p className="text-green-300/70 text-sm mb-6">The internship id you requested does not exist.</p>

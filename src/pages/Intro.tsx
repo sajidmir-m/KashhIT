@@ -46,9 +46,9 @@ const Intro = () => {
       <div className={`relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Logo */}
         <div className="mb-8 sm:mb-12 flex items-center gap-3 animate-fade-in">
-          <img src="/logo.png" alt="Kash.it" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 object-contain" />
+          <img src="/logo.png" alt="Kassh.IT" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 object-contain" />
           <span className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
-            Kash.it
+            Kassh.IT
           </span>
         </div>
 

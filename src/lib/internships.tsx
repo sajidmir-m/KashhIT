@@ -39,7 +39,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["React", "Vue.js", "Angular", "TypeScript", "HTML/CSS", "Tailwind CSS"],
     color: "text-cyan-400",
     terminalColor: "border-cyan-500/50 bg-cyan-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Develop responsive web applications using React, Vue.js, or Angular",
       "Implement modern UI/UX designs with CSS frameworks like Tailwind CSS",
@@ -74,7 +74,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["Node.js", "Python", "Java", "REST APIs", "PostgreSQL", "MongoDB"],
     color: "text-green-400",
     terminalColor: "border-green-500/50 bg-green-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Design and develop RESTful APIs and GraphQL endpoints",
       "Build scalable server-side applications using Node.js, Python, or Java",
@@ -108,7 +108,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["React", "Node.js", "PostgreSQL", "TypeScript", "AWS", "Docker"],
     color: "text-emerald-400",
     terminalColor: "border-emerald-500/50 bg-emerald-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Build end-to-end web applications from design to deployment",
       "Develop both frontend interfaces and backend APIs",
@@ -142,7 +142,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["React Native", "Flutter", "iOS", "Android", "Firebase", "Redux"],
     color: "text-yellow-400",
     terminalColor: "border-yellow-500/50 bg-yellow-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Develop cross-platform mobile applications using React Native or Flutter",
       "Build native iOS and Android apps using Swift/Kotlin",
@@ -176,7 +176,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Terraform", "Linux"],
     color: "text-blue-400",
     terminalColor: "border-blue-500/50 bg-blue-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Set up and manage cloud infrastructure on AWS, Azure, or GCP",
       "Create and maintain CI/CD pipelines using GitHub Actions, Jenkins, or GitLab",
@@ -210,7 +210,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["Python", "Machine Learning", "TensorFlow", "Pandas", "SQL", "Data Visualization"],
     color: "text-purple-400",
     terminalColor: "border-purple-500/50 bg-purple-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Analyze large datasets and extract meaningful insights",
       "Build and train machine learning models using Python libraries",
@@ -245,7 +245,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["Kali Linux", "Penetration Testing", "Network Security", "Cryptography", "OWASP", "Forensics"],
     color: "text-red-400",
     terminalColor: "border-red-500/50 bg-red-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Perform security assessments and penetration testing",
       "Identify and exploit vulnerabilities in web applications and networks",
@@ -279,7 +279,7 @@ export const internshipPrograms: InternshipProgram[] = [
     skills: ["Arduino", "Raspberry Pi", "ESP32", "MQTT", "Python", "Embedded C"],
     color: "text-orange-400",
     terminalColor: "border-orange-500/50 bg-orange-500/5",
-    provider: "kaash.IT",
+    provider: "Kassh.IT",
     whatToDo: [
       "Develop IoT solutions using Arduino, Raspberry Pi, and ESP32",
       "Work with sensors, actuators, and microcontrollers",

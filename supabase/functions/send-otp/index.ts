@@ -70,7 +70,7 @@ serve(async (req) => {
     const smtpUser = Deno.env.get('SMTP_USER')
     const smtpPass = Deno.env.get('SMTP_PASS')
     const senderEmail = Deno.env.get('SMTP_SENDER_EMAIL') || smtpUser
-    const senderName = Deno.env.get('SMTP_SENDER_NAME') || 'Kash.it'
+    const senderName = Deno.env.get('SMTP_SENDER_NAME') || 'Kassh.IT'
 
     if (!smtpUser || !smtpPass || !senderEmail) {
       return new Response(JSON.stringify({ error: 'SMTP not configured' }), { status: 500, headers: corsHeaders(origin) })
@@ -84,16 +84,16 @@ serve(async (req) => {
       password: smtpPass,
     })
 
-    const subject = `Kash.it verification code: ${code}`
+    const subject = `Kassh.IT verification code: ${code}`
     const body = [
       `Hi ${full_name || ''}`.trim() + ',',
       '',
-      `Kash.it verification: your OTP is ${code}.`,
+      `Kassh.IT verification: your OTP is ${code}.`,
       'Enter this code in the app to verify your email.',
       'This code expires in 10 minutes.',
       '',
       'Thanks,',
-      'Kash.it',
+      'Kassh.IT',
     ].join('\n')
 
     await client.send({

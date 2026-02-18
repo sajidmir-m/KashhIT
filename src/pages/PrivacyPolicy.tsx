@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">1. Introduction</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Welcome to KasshIT ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. 
+                Welcome to Kassh.IT ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. 
                 This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
               </p>
             </section>
@@ -125,7 +125,7 @@ const PrivacyPolicy = () => {
                 If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:
               </p>
               <div className="mt-3 space-y-1 text-muted-foreground">
-                <p><strong>Email:</strong> support@kasshit.com</p>
+                <p><strong>Email:</strong> kasshit_1@zohomail.com</p>
                 <p><strong>Phone:</strong> +91 123 456 7890</p>
                 <p><strong>Address:</strong> India</p>
               </div>

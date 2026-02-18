@@ -28,7 +28,7 @@ const CookiePolicy = () => {
             <section>
               <h2 className="text-xl font-semibold mb-3 text-emerald-900">2. How We Use Cookies</h2>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                KasshIT uses cookies for various purposes to enhance your experience on our website:
+                Kassh.IT uses cookies for various purposes to enhance your experience on our website:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li><strong>Essential Cookies:</strong> Required for the website to function properly, including authentication and security</li>
@@ -145,7 +145,7 @@ const CookiePolicy = () => {
                 If you have any questions about our use of cookies or this Cookie Policy, please contact us:
               </p>
               <div className="mt-3 space-y-1 text-muted-foreground">
-                <p><strong>Email:</strong> support@kasshit.com</p>
+                <p><strong>Email:</strong> kasshit_1@zohomail.com</p>
                 <p><strong>Phone:</strong> +91 123 456 7890</p>
                 <p><strong>Address:</strong> India</p>
               </div>

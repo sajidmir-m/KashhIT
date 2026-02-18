@@ -328,7 +328,7 @@ serve(async (req) => {
           try {
             const emailBody = `
 ═══════════════════════════════════════════════════════════
-                    KASH.IT MARKETPLACE
+                    KASSH.IT MARKETPLACE
                Your Trusted E-Commerce Platform
 ═══════════════════════════════════════════════════════════
 
@@ -376,24 +376,24 @@ ${emailData.gstin ? `   GSTIN:         ${emailData.gstin}` : ''}
 📞 NEED HELP?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-   📧 Email:   support@kash.it
+   📧 Email:   kasshit_1@zohomail.com
    🌐 Website: https://kash.it
 
 ═══════════════════════════════════════════════════════════
 
-Thank you for partnering with Kash.it!
+Thank you for partnering with Kassh.IT!
 
 Best regards,
-Kash.it Team
+Kassh.IT Team
 
 ═══════════════════════════════════════════════════════════
-© 2025 Kash.it - Your Trusted Marketplace
+© 2025 Kassh.IT - Your Trusted Marketplace
 ═══════════════════════════════════════════════════════════
             `.trim()
 
             await sendEmailViaSMTP(
               emailData.to,
-              '🎉 Welcome to Kash.it - Your Vendor Account is Ready!',
+              '🎉 Welcome to Kassh.IT - Your Vendor Account is Ready!',
               emailBody,
               {
                 host: smtpHost,

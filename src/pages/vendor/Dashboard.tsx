@@ -1088,11 +1088,11 @@ const VendorOrders = ({ userId, view = 'live' }: { userId: string | null; view?:
   const downloadReceipt = (order: any) => {
     // Get vendor details
     const vendorDetails = {
-      businessName: "KashIT E-Commerce", // Your company name
+      businessName: "Kassh.IT E-Commerce", // Your company name
       address: "123 Business Street, Tech City, TC 12345",
       phone: "+1 (555) 123-4567",
-      email: "orders@kashit.com",
-      website: "www.kashit.com"
+      email: "kasshit_1@zohomail.com",
+      website: "www.kash.it"
     };
 
     // Create receipt HTML

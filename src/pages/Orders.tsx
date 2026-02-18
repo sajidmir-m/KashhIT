@@ -369,7 +369,7 @@ const Orders = () => {
 <body>
   <div class="receipt">
     <div class="header">
-      <div class="company-name">Kash.it E-Commerce</div>
+      <div class="company-name">Kassh.IT E-Commerce</div>
       <div class="company-details">
         Order Receipt<br>
         Generated on ${new Date().toLocaleString()}

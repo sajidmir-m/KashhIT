@@ -729,9 +729,9 @@ const Home = () => {
             {/* Company Info */}
             <div className="xs:col-span-2 md:col-span-1">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                <img src="/logo.png" alt="KasshIT" className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 object-contain" />
+                <img src="/logo.png" alt="Kassh.IT" className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 object-contain" />
                 <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
-                  KasshIT
+                  Kassh.IT
                 </span>
               </div>
               <p className="text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed">
@@ -812,8 +812,8 @@ const Home = () => {
                 </li>
                 <li className="flex items-center space-x-2">
                   <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 flex-shrink-0" />
-                  <a href="mailto:support@kasshit.com" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors break-all">
-                    support@kasshit.com
+                  <a href="mailto:kasshit_1@zohomail.com" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors break-all">
+                    kasshit_1@zohomail.com
                   </a>
                 </li>
                 <li className="flex items-start space-x-2">
@@ -830,7 +830,7 @@ const Home = () => {
           <div className="border-t border-gray-800 pt-6 sm:pt-8 mt-6 sm:mt-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
               <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
-                © {new Date().getFullYear()} KasshIT. All rights reserved.
+                © {new Date().getFullYear()} Kassh.IT. All rights reserved.
               </p>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
                 <Link to="/privacy-policy" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">

@@ -78,7 +78,7 @@ const getCoordinatesFromAddress = async (address: string): Promise<{ latitude: n
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`,
       {
         headers: {
-          'User-Agent': 'Kash.it E-Commerce App', // Required by Nominatim
+          'User-Agent': 'Kassh.IT E-Commerce App', // Required by Nominatim
         },
       }
     );
