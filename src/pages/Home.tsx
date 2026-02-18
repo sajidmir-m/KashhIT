@@ -812,8 +812,8 @@ const Home = () => {
                 </li>
                 <li className="flex items-center space-x-2">
                   <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-400 flex-shrink-0" />
-                  <a href="mailto:kasshit_1@zohomail.com" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors break-all">
-                    kasshit_1@zohomail.com
+                  <a href="mailto:kasshit_1@zohomail.in" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors break-all">
+                    kasshit_1@zohomail.in
                   </a>
                 </li>
                 <li className="flex items-start space-x-2">

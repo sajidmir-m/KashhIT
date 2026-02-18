@@ -1091,8 +1091,8 @@ const VendorOrders = ({ userId, view = 'live' }: { userId: string | null; view?:
       businessName: "Kassh.IT E-Commerce", // Your company name
       address: "123 Business Street, Tech City, TC 12345",
       phone: "+1 (555) 123-4567",
-      email: "kasshit_1@zohomail.com",
-      website: "www.kash.it"
+      email: "kasshit_1@zohomail.in",
+      website: "www.kasshit.in"
     };
 
     // Create receipt HTML

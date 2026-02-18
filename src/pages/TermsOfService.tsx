@@ -154,7 +154,7 @@ const TermsOfService = () => {
                 For questions about these Terms of Service, please contact us:
               </p>
               <div className="mt-3 space-y-1 text-muted-foreground">
-                <p><strong>Email:</strong> kasshit_1@zohomail.com</p>
+                <p><strong>Email:</strong> kasshit_1@zohomail.in</p>
                 <p><strong>Phone:</strong> +91 123 456 7890</p>
                 <p><strong>Address:</strong> India</p>
               </div>

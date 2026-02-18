@@ -320,7 +320,7 @@ serve(async (req) => {
       const smtpUser = Deno.env.get('SMTP_USER')
       const smtpPass = Deno.env.get('SMTP_PASS')
       const senderEmail = Deno.env.get('SMTP_SENDER_EMAIL') || smtpUser
-      const appUrl = Deno.env.get('APP_URL') || 'https://your-app.com'
+      const appUrl = Deno.env.get('APP_URL') || 'https://www.kasshit.in'
 
       if (smtpUser && smtpPass) {
         // Send email in background without blocking response
@@ -376,8 +376,8 @@ ${emailData.gstin ? `   GSTIN:         ${emailData.gstin}` : ''}
 📞 NEED HELP?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-   📧 Email:   kasshit_1@zohomail.com
-   🌐 Website: https://kash.it
+   📧 Email:   kasshit_1@zohomail.in
+   🌐 Website: https://www.kasshit.in
 
 ═══════════════════════════════════════════════════════════
 

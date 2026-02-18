@@ -26,6 +26,129 @@ declare global {
   }
 }
 
+// Helper function to send order confirmation email
+const sendOrderConfirmationEmail = async (
+  orderId: string,
+  userEmail: string,
+  orderDetails: {
+    items: Array<{ name: string; price: number; quantity: number }>;
+    subtotal: number;
+    discount: number;
+    finalAmount: number;
+    paymentMethod: string;
+    address: string;
+  }
+) => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      console.warn('No session found, skipping email');
+      return;
+    }
+
+    const itemsHtml = orderDetails.items
+      .map(
+        (item) => `
+      <tr>
+        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">₹${item.price.toFixed(2)}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">₹${(item.price * item.quantity).toFixed(2)}</td>
+      </tr>
+    `
+      )
+      .join('');
+
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
+          .order-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: bold; }
+          td { padding: 8px; }
+          .total { font-size: 18px; font-weight: bold; color: #10b981; margin-top: 20px; }
+          .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Order Confirmed!</h1>
+            <p>Thank you for your order</p>
+          </div>
+          <div class="content">
+            <p>Dear Customer,</p>
+            <p>Your order <strong>#${orderId}</strong> has been confirmed successfully!</p>
+            
+            <div class="order-box">
+              <h2 style="margin-top: 0;">Order Details</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th style="text-align: center;">Quantity</th>
+                    <th style="text-align: right;">Price</th>
+                    <th style="text-align: right;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${itemsHtml}
+                </tbody>
+              </table>
+              
+              <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+                <p style="margin: 5px 0;"><strong>Subtotal:</strong> ₹${orderDetails.subtotal.toFixed(2)}</p>
+                ${orderDetails.discount > 0 ? `<p style="margin: 5px 0;"><strong>Discount:</strong> -₹${orderDetails.discount.toFixed(2)}</p>` : ''}
+                <p class="total">Total Amount: ₹${orderDetails.finalAmount.toFixed(2)}</p>
+                <p style="margin-top: 10px;"><strong>Payment Method:</strong> ${orderDetails.paymentMethod}</p>
+              </div>
+            </div>
+            
+            <div class="order-box">
+              <h2 style="margin-top: 0;">Delivery Address</h2>
+              <p>${orderDetails.address}</p>
+            </div>
+            
+            <p>We'll send you another email when your order ships. You can track your order status in your account.</p>
+            
+            <div class="footer">
+              <p>Thank you for shopping with Kassh.IT!</p>
+              <p>If you have any questions, please contact us at kasshit_1@zohomail.in</p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const { data, error } = await supabase.functions.invoke('send-order-email', {
+      body: {
+        to: userEmail,
+        subject: `Order Confirmed - Order #${orderId}`,
+        html: emailHtml,
+        type: 'order_confirmation',
+        orderId: orderId,
+      },
+    });
+
+    if (error) {
+      console.error('Failed to send order confirmation email:', error);
+    } else {
+      console.log('Order confirmation email sent successfully');
+    }
+  } catch (error) {
+    console.error('Error sending order confirmation email:', error);
+    // Don't throw - email failure shouldn't break order creation
+  }
+};
+
 const Checkout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -417,6 +540,35 @@ const Checkout = () => {
           .eq('user_id', user.id);
         if (clearErr) throw clearErr;
       }
+
+      // Send order confirmation email
+      const deliveryAddress = isForSomeoneElse && recipientAddress
+        ? `${recipientAddress}, ${selectedAddress.city || ''}, ${selectedAddress.state || ''} - ${altPincode || selectedAddress.pincode || ''}`
+        : `${selectedAddress.full_address || ''}, ${selectedAddress.city || ''}, ${selectedAddress.state || ''} - ${selectedAddress.pincode || ''}`;
+
+      const orderItems = computedItems.map((ci: any) => {
+        const product = ci.products || ci.product;
+        return {
+          name: product?.name || 'Unknown Product',
+          price: product?.price || 0,
+          quantity: ci.quantity || 1,
+        };
+      });
+
+      // Get user email
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser?.email) {
+        await sendOrderConfirmationEmail(order.id, authUser.email, {
+          items: orderItems,
+          subtotal: Number(subtotal.toFixed(2)),
+          discount: Number(discountAmount.toFixed(2)),
+          finalAmount: Number(finalAmount.toFixed(2)),
+          paymentMethod: 'Cash on Delivery (COD)',
+          address: deliveryAddress,
+        });
+      }
+
+      return order;
     },
     onSuccess: () => {
       toast.success('Order placed successfully (COD)');
@@ -585,6 +737,35 @@ const Checkout = () => {
           .eq('user_id', user.id);
         if (clearErr) throw clearErr;
       }
+
+      // Send order confirmation email
+      const deliveryAddress = isForSomeoneElse && recipientAddress
+        ? `${recipientAddress}, ${selectedAddress.city || ''}, ${selectedAddress.state || ''} - ${altPincode || selectedAddress.pincode || ''}`
+        : `${selectedAddress.full_address || ''}, ${selectedAddress.city || ''}, ${selectedAddress.state || ''} - ${selectedAddress.pincode || ''}`;
+
+      const orderItems = computedItems.map((ci: any) => {
+        const product = ci.products || ci.product;
+        return {
+          name: product?.name || 'Unknown Product',
+          price: product?.price || 0,
+          quantity: ci.quantity || 1,
+        };
+      });
+
+      // Get user email
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser?.email) {
+        await sendOrderConfirmationEmail(order.id, authUser.email, {
+          items: orderItems,
+          subtotal: Number(subtotal.toFixed(2)),
+          discount: Number(discountAmount.toFixed(2)),
+          finalAmount: Number(finalAmount.toFixed(2)),
+          paymentMethod: 'Online Payment (Razorpay)',
+          address: deliveryAddress,
+        });
+      }
+
+      return order;
     },
     onSuccess: () => {
       toast.success('Order placed successfully');

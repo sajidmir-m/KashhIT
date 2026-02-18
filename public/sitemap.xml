@@ -6,13 +6,13 @@
   
   <!-- Home & Main Pages -->
   <url>
-    <loc>https://kash.it/</loc>
+    <loc>https://www.kasshit.in/</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kash.it/home</loc>
+    <loc>https://www.kasshit.in/home</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -20,31 +20,31 @@
   
   <!-- Products & Shopping -->
   <url>
-    <loc>https://kash.it/products</loc>
+    <loc>https://www.kasshit.in/products</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kash.it/categories</loc>
+    <loc>https://www.kasshit.in/categories</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kash.it/cart</loc>
+    <loc>https://www.kasshit.in/cart</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/wishlist</loc>
+    <loc>https://www.kasshit.in/wishlist</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/search</loc>
+    <loc>https://www.kasshit.in/search</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -52,55 +52,55 @@
   
   <!-- Internships -->
   <url>
-    <loc>https://kash.it/internships</loc>
+    <loc>https://www.kasshit.in/internships</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/frontend</loc>
+    <loc>https://www.kasshit.in/internships/frontend</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/backend</loc>
+    <loc>https://www.kasshit.in/internships/backend</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/fullstack</loc>
+    <loc>https://www.kasshit.in/internships/fullstack</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/mobile</loc>
+    <loc>https://www.kasshit.in/internships/mobile</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/devops</loc>
+    <loc>https://www.kasshit.in/internships/devops</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/data-science</loc>
+    <loc>https://www.kasshit.in/internships/data-science</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/cybersecurity</loc>
+    <loc>https://www.kasshit.in/internships/cybersecurity</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kash.it/internships/iot</loc>
+    <loc>https://www.kasshit.in/internships/iot</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -108,7 +108,7 @@
   
   <!-- Projects -->
   <url>
-    <loc>https://kash.it/explore-projects</loc>
+    <loc>https://www.kasshit.in/explore-projects</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -116,13 +116,13 @@
   
   <!-- User Pages -->
   <url>
-    <loc>https://kash.it/profile</loc>
+    <loc>https://www.kasshit.in/profile</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://kash.it/orders</loc>
+    <loc>https://www.kasshit.in/orders</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -130,19 +130,19 @@
   
   <!-- Legal Pages -->
   <url>
-    <loc>https://kash.it/privacy-policy</loc>
+    <loc>https://www.kasshit.in/privacy-policy</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://kash.it/terms-of-service</loc>
+    <loc>https://www.kasshit.in/terms-of-service</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://kash.it/cookie-policy</loc>
+    <loc>https://www.kasshit.in/cookie-policy</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -150,7 +150,7 @@
   
   <!-- Auth Pages -->
   <url>
-    <loc>https://kash.it/auth</loc>
+    <loc>https://www.kasshit.in/auth</loc>
     <lastmod>2024-12-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

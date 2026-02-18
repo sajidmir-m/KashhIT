@@ -3,6 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4'
+import { SmtpClient } from 'https://deno.land/x/smtp@v0.7.0/mod.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -60,62 +61,73 @@ serve(async (req) => {
       )
     }
 
-    // In a real implementation, you would use an email service like:
-    // - Resend
-    // - SendGrid
-    // - AWS SES
-    // - Mailgun
-    // For now, we'll log the email (you can integrate with your preferred service)
+    // Send email via SMTP (same as send-otp function)
+    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
+    const smtpPort = Number(Deno.env.get('SMTP_PORT') || '587')
+    const smtpUser = Deno.env.get('SMTP_USER')
+    const smtpPass = Deno.env.get('SMTP_PASS')
+    const senderEmail = Deno.env.get('SMTP_SENDER_EMAIL') || smtpUser
+    const senderName = Deno.env.get('SMTP_SENDER_NAME') || 'Kassh.IT'
 
-    console.log('Email to send:', {
-      to,
-      subject,
-      type,
-      orderId,
-      htmlLength: html.length,
-    })
-
-    // Example: Using Resend (uncomment and configure)
-    /*
-    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-    if (!RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY not configured')
+    if (!smtpUser || !smtpPass || !senderEmail) {
+      console.warn('SMTP not configured, email will not be sent')
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'SMTP not configured',
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200, // Return 200 so order creation doesn't fail
+        }
+      )
     }
 
-    const resendResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Kassh.IT <kasshit_1@zohomail.com>',
-        to: [to],
-        subject,
-        html,
-      }),
-    })
+    try {
+      const client = new SmtpClient()
+      await client.connectTLS({
+        hostname: smtpHost,
+        port: smtpPort,
+        username: smtpUser,
+        password: smtpPass,
+      })
 
-    if (!resendResponse.ok) {
-      const error = await resendResponse.text()
-      throw new Error(`Failed to send email: ${error}`)
+      await client.send({
+        from: `${senderName} <${senderEmail}>`,
+        to: to,
+        subject: subject,
+        content: html,
+        html: html,
+      })
+      await client.close()
+
+      console.log('Order email sent successfully:', { to, subject, type, orderId })
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Email sent successfully',
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        }
+      )
+    } catch (emailError) {
+      console.error('Failed to send order email:', emailError)
+      // Don't fail the request if email fails
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Order created but email failed to send',
+          error: emailError instanceof Error ? emailError.message : String(emailError),
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200, // Return 200 so order creation doesn't fail
+        }
+      )
     }
-
-    const result = await resendResponse.json()
-    */
-
-    // For now, return success (email would be sent in production)
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: 'Email queued for sending',
-        // In production, include: emailId: result.id
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    )
 
   } catch (error) {
     console.error('Error in send-order-email:', error)
