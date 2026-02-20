@@ -9,9 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Package, Store, Truck, Send, Ban, RefreshCcw, Check, Eye, UserCheck, Clock, UserPlus } from 'lucide-react';
+import { Users, Package, Store, Truck, Send, Ban, RefreshCcw, Check, Eye, UserCheck, Clock, UserPlus, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getInternshipProgram } from '@/lib/internships';
 
 const AdminDashboard = () => {
   const { userRoles, user, loading } = useAuth();
@@ -44,7 +45,7 @@ const AdminDashboard = () => {
 
         <Tabs defaultValue="vendors" className="w-full">
           <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-6">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 min-w-[300px] sm:min-w-[500px]">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 min-w-[300px] sm:min-w-[600px]">
               <TabsTrigger value="vendors" className="text-xs sm:text-sm px-2 sm:px-4">
                 <Store className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                 <span className="hidden sm:inline">Vendors</span>
@@ -64,6 +65,11 @@ const AdminDashboard = () => {
                 <Truck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                 <span className="hidden sm:inline">Orders</span>
                 <span className="sm:hidden">Orders</span>
+              </TabsTrigger>
+              <TabsTrigger value="internships" className="text-xs sm:text-sm px-2 sm:px-4">
+                <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Internships</span>
+                <span className="sm:hidden">Internships</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -110,6 +116,12 @@ const AdminDashboard = () => {
           <TabsContent value="orders" className="space-y-4 sm:space-y-6">
             <Card>
               <OrderManagement />
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="internships" className="space-y-4 sm:space-y-6">
+            <Card>
+              <InternshipApplicationsList />
             </Card>
           </TabsContent>
         </Tabs>
@@ -1090,7 +1102,17 @@ const CreateDeliveryPartnerForm = () => {
           vehicle_number: vehicleNumber.trim() || null,
         },
       });
-      if (error) throw error;
+      
+      if (error) {
+        // Check if it's a deployment/network error
+        if (error.message?.includes('Failed to send a request') || 
+            error.message?.includes('fetch') ||
+            error.name === 'FunctionsFetchError') {
+          throw new Error('Edge function not available. Please ensure the create-delivery-partner function is deployed to Supabase.');
+        }
+        throw error;
+      }
+      
       if (!data?.ok) throw new Error(data?.error || 'Failed to create delivery partner');
       if (!data?.password) {
         // We still consider it success if email was sent but password not returned
@@ -2325,6 +2347,154 @@ const VendorInvitationsList = () => {
           ))}
         </div>
       )}
+    </CardContent>
+  );
+};
+
+const InternshipApplicationsList = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['admin-internship-applications'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('internship_applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <CardContent>
+        <p className="text-sm text-muted-foreground">Loading applications...</p>
+      </CardContent>
+    );
+  }
+
+  if (error) {
+    return (
+      <CardContent>
+        <p className="text-sm text-destructive">Error loading applications. The table may not exist yet.</p>
+      </CardContent>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <CardContent>
+        <p className="text-sm text-muted-foreground">No internship applications yet.</p>
+      </CardContent>
+    );
+  }
+
+  return (
+    <CardContent>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <GraduationCap className="h-5 w-5" />
+          Internship Applications ({data.length})
+        </CardTitle>
+      </CardHeader>
+      <div className="space-y-4 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        {data.map((app: any) => {
+          const program = getInternshipProgram(app.internship_type);
+          return (
+            <Card key={app.id} className="border-l-4 border-l-emerald-500">
+              <CardContent className="p-4 sm:p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">{app.full_name}</h3>
+                    <div className="space-y-1 text-sm">
+                      <p><span className="font-medium">Email:</span> {app.email}</p>
+                      <p><span className="font-medium">Phone:</span> {app.phone || 'N/A'}</p>
+                      <p><span className="font-medium">Internship:</span> {program?.title || app.internship_type}</p>
+                      <p><span className="font-medium">Status:</span> 
+                        <Badge variant={app.status === 'approved' ? 'default' : app.status === 'rejected' ? 'destructive' : 'secondary'} className="ml-2">
+                          {app.status}
+                        </Badge>
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="space-y-1 text-sm">
+                      <p><span className="font-medium">College:</span> {app.college || 'N/A'}</p>
+                      <p><span className="font-medium">Course:</span> {app.course || 'N/A'}</p>
+                      <p><span className="font-medium">Year:</span> {app.year || 'N/A'}</p>
+                      <p><span className="font-medium">Duration Preference:</span> {app.duration_preference || 'N/A'}</p>
+                      <p><span className="font-medium">Applied:</span> {new Date(app.created_at).toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className="font-medium text-sm mb-1">Portfolio:</p>
+                    {app.portfolio_url ? (
+                      <a href={app.portfolio_url} target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 hover:underline break-all">
+                        {app.portfolio_url}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">N/A</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm mb-1">GitHub:</p>
+                    {app.github_url ? (
+                      <a href={app.github_url} target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 hover:underline break-all">
+                        {app.github_url}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">N/A</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm mb-1">LinkedIn:</p>
+                    {app.linkedin_url ? (
+                      <a href={app.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 hover:underline break-all">
+                        {app.linkedin_url}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">N/A</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm mb-1">Resume:</p>
+                    {app.resume_url ? (
+                      <a href={app.resume_url} target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 hover:underline break-all">
+                        {app.resume_url}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">N/A</p>
+                    )}
+                  </div>
+                </div>
+
+                {app.cover_letter && (
+                  <div className="mb-4">
+                    <p className="font-medium text-sm mb-1">Cover Letter:</p>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{app.cover_letter}</p>
+                  </div>
+                )}
+
+                {app.previous_experience && (
+                  <div className="mb-4">
+                    <p className="font-medium text-sm mb-1">Previous Experience:</p>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{app.previous_experience}</p>
+                  </div>
+                )}
+
+                {app.availability && (
+                  <div className="mb-4">
+                    <p className="font-medium text-sm mb-1">Availability:</p>
+                    <p className="text-sm text-muted-foreground">{app.availability}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </CardContent>
   );
 };

@@ -253,7 +253,7 @@ const Internships = () => {
     setFormData(formDataRef.current);
   };
 
-  // Deep-link support: /internships?apply=frontend
+  // Deep-link support: /career?apply=frontend or /internships?apply=frontend
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const applyId = params.get('apply');
@@ -262,10 +262,11 @@ const Internships = () => {
     const program = getInternshipProgram(applyId);
     if (program) {
       // Clear query param to prevent reopening on state changes
-      navigate('/internships', { replace: true });
+      const currentPath = location.pathname;
+      navigate(currentPath, { replace: true });
       handleOpenDialog(program);
     }
-  }, [location.search]);
+  }, [location.search, location.pathname]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -320,7 +321,7 @@ const Internships = () => {
         title="Internship Programs - Software & Hardware Development | Kasshit"
         description="Join Kasshit's internship programs in Frontend, Backend, Full Stack, Mobile, DevOps, Data Science, Cybersecurity, and IoT Development. Gain hands-on experience with real projects."
         keywords="internship programs, software development internship, hardware internship, frontend development, backend development, full stack internship, mobile app development, DevOps internship, data science internship, cybersecurity internship, IoT internship"
-        canonical="https://www.kasshit.in/internships"
+        canonical="https://www.kasshit.in/career"
       />
       <MatrixRain />
       <Navbar />
@@ -438,7 +439,7 @@ const Internships = () => {
                 <Button 
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/internships/${internship.id}`);
+                    navigate(`/career/${internship.id}`);
                   }}
                   className="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/50 font-mono transition-all"
                 >

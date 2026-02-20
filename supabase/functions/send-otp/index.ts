@@ -64,8 +64,8 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: insErr.message }), { status: 400, headers: corsHeaders(origin) })
     }
 
-    // 2) Send email via SMTP (Gmail App Password recommended)
-    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
+    // 2) Send email via SMTP (Zoho Mail SMTP)
+    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.zoho.in'
     const smtpPort = Number(Deno.env.get('SMTP_PORT') || '587')
     const smtpUser = Deno.env.get('SMTP_USER')
     const smtpPass = Deno.env.get('SMTP_PASS')

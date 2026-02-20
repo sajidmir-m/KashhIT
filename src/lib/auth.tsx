@@ -14,7 +14,7 @@ interface AuthContextType {
   updatePassword: (password: string) => Promise<{ error: any }>;
   checkEmailAvailable: (email: string) => Promise<boolean>;
   sendSignupOtp: (email: string, fullName?: string, phone?: string, password?: string) => Promise<{ error: any }>;
-  verifySignupOtp: (email: string, token: string) => Promise<{ error: any }>;
+  verifySignupOtp: (email: string, token: string, password: string, fullName?: string, phone?: string) => Promise<{ error: any }>;
   needsPasswordSetup: boolean;
   signOut: () => Promise<void>;
   signOutSilent: () => Promise<void>;
@@ -231,7 +231,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return !data; // available if no profile found
   };
 
-  // Send OTP for signup using Supabase Confirm Sign Up (OTP) - regular users only
+  // Send OTP for signup using custom SMTP edge function - regular users only
   const sendSignupOtp = async (email: string, fullName?: string, phone?: string, password?: string) => {
     if (sessionNamespace !== 'user') {
       return { error: { message: 'OTP signup only for regular users' } };
@@ -242,46 +242,103 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { error: { message: 'Password is required' } };
     }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-          phone: phone,
+    // Call custom send-otp edge function to send OTP via SMTP
+    try {
+      const { data, error: invokeError } = await supabase.functions.invoke('send-otp', {
+        body: {
+          email: email.trim().toLowerCase(),
+          full_name: fullName?.trim() || '',
         },
-        // Do not pass redirect; Supabase will send the OTP email
-      },
-    });
+      });
 
-    if (error) {
-      toast.error(error.message);
-      return { error };
+      if (invokeError) {
+        console.error('Error calling send-otp function:', invokeError);
+        
+        // Check if it's a deployment/network error
+        if (invokeError.message?.includes('Failed to send a request') || 
+            invokeError.message?.includes('fetch') ||
+            invokeError.name === 'FunctionsFetchError') {
+          const errorMsg = 'Edge function not available. Please ensure the send-otp function is deployed to Supabase.';
+          console.error(errorMsg);
+          toast.error('OTP service unavailable. Please contact support.');
+          return { error: { message: errorMsg } };
+        }
+        
+        toast.error('Failed to send OTP. Please try again.');
+        return { error: { message: invokeError.message || 'Failed to send OTP' } };
+      }
+
+      // Handle case where data might be null or undefined
+      if (data === null || data === undefined) {
+        console.error('send-otp function returned no data');
+        toast.error('Failed to send OTP. Please try again.');
+        return { error: { message: 'No response from server' } };
+      }
+
+      if (!data?.ok) {
+        const errorMsg = data?.error || 'Failed to send OTP';
+        console.error('send-otp function error:', errorMsg);
+        toast.error(errorMsg);
+        return { error: { message: errorMsg } };
+      }
+
+      toast.success('Verification code sent to your email');
+      return { error: null };
+    } catch (err: any) {
+      console.error('Error sending OTP:', err);
+      
+      // Provide more specific error messages
+      if (err?.message?.includes('Failed to send a request') || 
+          err?.message?.includes('fetch') ||
+          err?.name === 'FunctionsFetchError') {
+        const errorMsg = 'Edge function not available. Please ensure the send-otp function is deployed to Supabase.';
+        toast.error('OTP service unavailable. Please contact support.');
+        return { error: { message: errorMsg } };
+      }
+      
+      toast.error(err?.message || 'Failed to send OTP. Please try again.');
+      return { error: { message: err?.message || 'Failed to send OTP' } };
     }
-
-    toast.success('Verification code sent to your email');
-    return { error: null };
   };
 
-  // Verify OTP for signup (type 'signup')
-  const verifySignupOtp = async (email: string, token: string) => {
-    const { data, error } = await supabase.auth.verifyOtp({
-      email,
-      token,
-      type: 'signup',
-    } as any);
-
-    if (error) {
-      toast.error(error.message);
-      return { error };
+  // Verify OTP for signup using custom edge function
+  const verifySignupOtp = async (email: string, token: string, password: string, fullName?: string, phone?: string) => {
+    if (!password || password.length < 6) {
+      toast.error('Password is required');
+      return { error: { message: 'Password is required' } };
     }
 
-    if (data?.user) {
-      toast.success('Email verified');
-    } else {
-      toast.success('Code verified');
+    try {
+      const { data, error: invokeError } = await supabase.functions.invoke('verify-otp-signup', {
+        body: {
+          email: email.trim().toLowerCase(),
+          code: token,
+          password: password,
+          full_name: fullName?.trim() || '',
+          phone: phone?.trim() || null,
+        },
+      });
+
+      if (invokeError) {
+        console.error('Error calling verify-otp-signup function:', invokeError);
+        toast.error('Failed to verify OTP. Please try again.');
+        return { error: { message: invokeError.message || 'Failed to verify OTP' } };
+      }
+
+      if (!data?.ok) {
+        const errorMsg = data?.error || 'Invalid or expired code';
+        console.error('verify-otp-signup function error:', errorMsg);
+        toast.error(errorMsg);
+        return { error: { message: errorMsg } };
+      }
+
+      toast.success('Account created successfully! Please sign in.');
+      return { error: null };
+    } catch (err: any) {
+      console.error('Error verifying OTP:', err);
+      toast.error(err?.message || 'Failed to verify OTP. Please try again.');
+      return { error: { message: err?.message || 'Failed to verify OTP' } };
     }
-    return { error: null };
   };
 
   const signOutSilent = async () => {

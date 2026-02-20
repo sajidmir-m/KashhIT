@@ -286,7 +286,13 @@ const Auth = () => {
     }
 
     setLoading(true);
-    const { error } = await verifySignupOtp(signupData.email, otpCode);
+    const { error } = await verifySignupOtp(
+      signupData.email, 
+      otpCode, 
+      signupData.password, 
+      signupData.fullName, 
+      signupData.phone
+    );
     setLoading(false);
     if (!error) {
       await signOutSilent();

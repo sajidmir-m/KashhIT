@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Briefcase, Code, FileText, GraduationCap, Terminal, Zap, ArrowLeft, Building2, Clock } from "lucide-react";
 import { getInternshipProgram } from "@/lib/internships";
+import { SEOHead } from "@/components/SEOHead";
 
 // Matrix rain background effect (kept lightweight and pointer-events none)
 const MatrixRain = () => {
@@ -97,11 +98,11 @@ const InternshipDetail = () => {
             <p className="text-green-300/70 text-sm mb-6">The internship id you requested does not exist.</p>
             <div className="flex gap-2">
               <Button
-                onClick={() => navigate("/internships")}
+                onClick={() => navigate("/career")}
                 className="bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/50 font-mono"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                {">"} BACK_TO_INTERNSHIPS
+                {">"} BACK_TO_CAREER
               </Button>
               <Link to="/home">
                 <Button
@@ -122,6 +123,12 @@ const InternshipDetail = () => {
 
   return (
     <div className="min-h-screen bg-black text-green-400 relative overflow-hidden">
+      <SEOHead
+        title={`${program.title} Internship Program | Kasshit`}
+        description={program.description}
+        keywords={`${program.title}, internship, ${program.skills.join(', ')}, software development, hardware development`}
+        canonical={`https://www.kasshit.in/career/${program.id}`}
+      />
       <MatrixRain />
       <Navbar />
 
@@ -129,14 +136,14 @@ const InternshipDetail = () => {
         <div className="flex items-center justify-between gap-3 mb-6">
           <Button
             variant="outline"
-            onClick={() => navigate("/internships")}
+            onClick={() => navigate("/career")}
             className="bg-black/50 border-green-500/40 text-green-300 hover:bg-green-500/10 font-mono"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {">"} BACK
           </Button>
 
-          <Link to={`/internships?apply=${program.id}`}>
+          <Link to={`/career?apply=${program.id}`}>
             <Button className="bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/50 font-mono">
               <Terminal className="h-4 w-4 mr-2" />
               {">"} APPLY_NOW

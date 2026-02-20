@@ -177,14 +177,6 @@ const About = () => {
                 <p className="text-muted-foreground mb-6">
                   We're always looking for passionate individuals to join our team. Whether you're interested in technology, operations, or customer service, we have opportunities for growth.
                 </p>
-                <div className="space-y-3">
-                  <Link to="/internships">
-                    <Button className="w-full">Explore Internship Opportunities</Button>
-                  </Link>
-                  <p className="text-sm text-muted-foreground text-center">
-                    We offer internships in Software Development, Hardware Engineering, IoT, and more
-                  </p>
-                </div>
               </div>
             </div>
           </CardContent>

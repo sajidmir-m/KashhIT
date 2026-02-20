@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingBag, TrendingUp, Shield, Truck, User, Package, ShoppingCart, Droplets, House, Wrench, ShoppingBasket, Cookie, Candy, Egg, Sparkles, Apple, IceCream, CupSoda, Baby, Leaf, UtensilsCrossed, Percent, Zap, Star, Phone, Mail, MapPin, Plus, Minus, GraduationCap } from 'lucide-react';
+import { ShoppingBag, TrendingUp, Shield, Truck, User, Package, ShoppingCart, Droplets, House, Wrench, ShoppingBasket, Cookie, Candy, Egg, Sparkles, Apple, IceCream, CupSoda, Baby, Leaf, UtensilsCrossed, Percent, Zap, Star, Phone, Mail, MapPin, Plus, Minus } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
@@ -340,18 +340,20 @@ const Home = () => {
       <section className="relative text-white py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 px-2 xs:px-3 sm:px-4 overflow-hidden mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8 mt-2 xs:mt-3 sm:mt-4 rounded-3xl">
         {/* Background Image */}
         <div
-          className="absolute inset-0 rounded-3xl bg-cover bg-top bg-no-repeat"
+          className="absolute inset-0 rounded-3xl bg-cover bg-top bg-no-repeat z-0"
           style={{
             backgroundImage: 'url(/cart.jpg)',
           }}
         />
         {/* Silver and Sky Blue Gradient Overlays for polished effect */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-slate-400/30 via-sky-300/20 to-slate-500/40" />
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-sky-200/25 via-transparent to-slate-300/30" />
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black/20 via-transparent to-slate-400/15" />
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-slate-400/30 via-sky-300/20 to-slate-500/40 z-[1]" />
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-sky-200/25 via-transparent to-slate-300/30 z-[1]" />
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black/20 via-transparent to-slate-400/15 z-[1]" />
         {/* Subtle overlay for text readability */}
-        <div className="absolute inset-0 rounded-3xl bg-black/10" />
-        <div className="container relative mx-auto px-2 xs:px-3 sm:px-4">
+        <div className="absolute inset-0 rounded-3xl bg-black/10 z-[1]" />
+        {/* Ramadan Animation - Above overlays but below text */}
+        <RamadanAnimation />
+        <div className="container relative mx-auto px-2 xs:px-3 sm:px-4 z-30">
           <div className="flex items-center justify-center">
             <div className="text-center max-w-3xl">
               {isLoggedIn ? (
@@ -421,123 +423,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section - SEO Optimized */}
-      {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-emerald-50 to-white">
-          <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-3 sm:mb-4">
-                Why Choose Kasshit?
-              </h2>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experience the future of grocery shopping with India's fastest quick commerce platform
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Zap className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Lightning Fast Delivery</h3>
-                  <p className="text-muted-foreground">
-                    Get your groceries delivered in minutes, not hours. Our optimized delivery network ensures fresh products reach you at lightning speed.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Shield className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Secure Payments</h3>
-                  <p className="text-muted-foreground">
-                    Shop with confidence using our secure payment gateway. Multiple payment options including UPI, cards, and cash on delivery.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-8 w-8 text-emerald-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Quality Assured</h3>
-                  <p className="text-muted-foreground">
-                    Every product is carefully selected and quality-checked. Fresh produce, authentic brands, and guaranteed satisfaction.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Trust Building Section */}
-      {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
-                  Trusted by Thousands of Customers
-                </h2>
-                <p className="text-lg text-muted-foreground mb-6">
-                  Join India's growing community of satisfied customers who trust Kasshit for their daily grocery needs. We're committed to delivering excellence with every order.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Truck className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">Fast & Reliable Delivery</h4>
-                      <p className="text-muted-foreground text-sm">Average delivery time of 10-15 minutes in service areas</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Shield className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">100% Secure Transactions</h4>
-                      <p className="text-muted-foreground text-sm">Your payment information is encrypted and secure</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Star className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">Quality Guaranteed</h4>
-                      <p className="text-muted-foreground text-sm">Fresh products sourced directly from trusted suppliers</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-8 rounded-lg">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">10+</div>
-                    <div className="text-sm text-muted-foreground">Minutes Avg Delivery</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">1000+</div>
-                    <div className="text-sm text-muted-foreground">Products Available</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">24/7</div>
-                    <div className="text-sm text-muted-foreground">Customer Support</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">100%</div>
-                    <div className="text-sm text-muted-foreground">Secure Payments</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Offers Carousel */}
       <section className="px-2 sm:px-4 pt-2">
@@ -604,10 +489,10 @@ const Home = () => {
       <section className="py-6 sm:py-8 md:py-12 px-0 bg-white">
         <div className="w-full">
           <div className="mb-4 sm:mb-6 text-center px-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-900">Shop by Category</h2>
-            <p className="text-sm sm:text-base text-emerald-700 mt-1">Quickly find what you need</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#800020] to-black bg-clip-text text-transparent">Shop by Category</h2>
+            <p className="text-sm sm:text-base text-[#800020] mt-1">Quickly find what you need</p>
           </div>
-          <div className="rounded-2xl border border-emerald-100 p-3 sm:p-4 md:p-6 lg:p-8 bg-emerald-50/50 mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8">
+          <div className="rounded-2xl border border-red-900/50 p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-[#800020] via-black to-[#4a0000] mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8">
             <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 md:gap-4 justify-items-center items-start">
               {sortedHomeCategories.map((cat) => (
                   <Link key={cat.id} to={`/products?category=${cat.id}`} className="group cursor-pointer w-full">
@@ -621,7 +506,7 @@ const Home = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <p className="text-gray-700 text-[10px] xs:text-xs sm:text-xs font-medium line-clamp-2 px-1">{cat.name}</p>
+                      <p className="text-white text-[10px] xs:text-xs sm:text-xs font-medium line-clamp-2 px-1">{cat.name}</p>
                     </div>
                   </Link>
                 ))}
@@ -774,40 +659,6 @@ const Home = () => {
       {/* Recently Viewed Products */}
       <RecentlyViewed />
 
-      {/* Services for Software + Hardware Section */}
-      <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
-        <div className="container mx-auto">
-          <div className="mb-8 p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Wrench className="h-8 w-8 text-white" />
-              </div>
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Services for Software + Hardware</h3>
-                <p className="text-gray-600 text-sm sm:text-base mb-4">
-                  Explore our comprehensive internship programs in software and hardware development. 
-                  Gain hands-on experience, work on real projects, and learn from industry experts.
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center sm:justify-start mb-4">
-                  <Badge variant="secondary" className="text-xs">Frontend Development</Badge>
-                  <Badge variant="secondary" className="text-xs">Backend Development</Badge>
-                  <Badge variant="secondary" className="text-xs">Full Stack</Badge>
-                  <Badge variant="secondary" className="text-xs">Mobile Apps</Badge>
-                  <Badge variant="secondary" className="text-xs">DevOps & Cloud</Badge>
-                  <Badge variant="secondary" className="text-xs">Data Science & AI</Badge>
-                  <Badge variant="secondary" className="text-xs">Cybersecurity</Badge>
-                </div>
-                <Link to="/internships" className="inline-block">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all">
-                    <GraduationCap className="h-5 w-5 mr-2" />
-                    Explore Internships
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action for Non-logged-in Users */}
       {!isLoggedIn && (
@@ -835,6 +686,124 @@ const Home = () => {
                   Browse Products
                 </Button>
               </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Features Section - SEO Optimized */}
+      {!isLoggedIn && (
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-emerald-50 to-white">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-3 sm:mb-4">
+                Why Choose Kasshit?
+              </h2>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Experience the future of grocery shopping with India's fastest quick commerce platform
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Zap className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Lightning Fast Delivery</h3>
+                  <p className="text-muted-foreground">
+                    Get your groceries delivered in minutes, not hours. Our optimized delivery network ensures fresh products reach you at lightning speed.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Shield className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Secure Payments</h3>
+                  <p className="text-muted-foreground">
+                    Shop with confidence using our secure payment gateway. Multiple payment options including UPI, cards, and cash on delivery.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Star className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Quality Assured</h3>
+                  <p className="text-muted-foreground">
+                    Every product is carefully selected and quality-checked. Fresh produce, authentic brands, and guaranteed satisfaction.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trust Building Section */}
+      {!isLoggedIn && (
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
+                  Trusted by Thousands of Customers
+                </h2>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Join India's growing community of satisfied customers who trust Kasshit for their daily grocery needs. We're committed to delivering excellence with every order.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Truck className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">Fast & Reliable Delivery</h4>
+                      <p className="text-muted-foreground text-sm">Average delivery time of 10-15 minutes in service areas</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Shield className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">100% Secure Transactions</h4>
+                      <p className="text-muted-foreground text-sm">Your payment information is encrypted and secure</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
+                      <Star className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-emerald-900 mb-1">Quality Guaranteed</h4>
+                      <p className="text-muted-foreground text-sm">Fresh products sourced directly from trusted suppliers</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-8 rounded-lg">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">10+</div>
+                    <div className="text-sm text-muted-foreground">Minutes Avg Delivery</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">1000+</div>
+                    <div className="text-sm text-muted-foreground">Products Available</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">24/7</div>
+                    <div className="text-sm text-muted-foreground">Customer Support</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">100%</div>
+                    <div className="text-sm text-muted-foreground">Secure Payments</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -915,11 +884,6 @@ const Home = () => {
                     Shipping & Returns
                   </Link>
                 </li>
-                <li>
-                  <Link to="/internships" className="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm transition-colors">
-                    Internships
-                  </Link>
-                </li>
               </ul>
             </div>
 
@@ -978,6 +942,100 @@ const Home = () => {
 };
 
 export default Home;
+
+const RamadanAnimation = () => {
+  const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
+
+  useEffect(() => {
+    // Generate random stars
+    const newStars = Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: Math.random() * 3,
+    }));
+    setStars(newStars);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-[15]">
+      {/* Crescent Moon */}
+      <div className="absolute top-8 right-8 sm:top-12 sm:right-12 md:top-16 md:right-16 w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 z-20">
+        <div className="relative w-full h-full">
+          {/* Outer glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full opacity-90 animate-pulse blur-sm" />
+          {/* Main moon */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full opacity-100" />
+          {/* Crescent shadow */}
+          <div className="absolute left-1/2 top-1/2 w-3/4 h-3/4 bg-gradient-to-br from-black/80 to-black/60 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+          {/* Inner glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 to-yellow-300/30 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+        </div>
+      </div>
+
+      {/* Stars */}
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className="absolute bg-white rounded-full z-20"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: '4px',
+            height: '4px',
+            animation: `twinkle 2s ease-in-out ${star.delay}s infinite`,
+            boxShadow: '0 0 6px 3px rgba(255, 255, 255, 0.9), 0 0 12px 6px rgba(255, 255, 255, 0.5)',
+          }}
+        />
+      ))}
+
+      {/* Lanterns */}
+      <div className="absolute top-1/4 left-8 sm:left-12 md:left-16 w-10 h-16 sm:w-12 sm:h-20 md:w-14 md:h-24 opacity-90 z-20">
+        <div className="relative w-full h-full">
+          {/* Lantern body */}
+          <div className="w-full h-full bg-gradient-to-b from-yellow-400 via-yellow-300 to-yellow-500 rounded-t-full" style={{ animation: 'swing 3s ease-in-out infinite', transformOrigin: 'top center' }}>
+            {/* Lantern top hook */}
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-yellow-600 rounded-full" />
+            {/* Lantern glow */}
+            <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/80 to-yellow-400/60 rounded-t-full blur-sm animate-pulse" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute top-1/3 right-16 sm:right-20 md:right-24 w-8 h-14 sm:w-10 sm:h-18 md:w-12 md:h-22 opacity-85 z-20">
+        <div className="relative w-full h-full">
+          {/* Lantern body */}
+          <div className="w-full h-full bg-gradient-to-b from-yellow-400 via-yellow-300 to-yellow-500 rounded-t-full" style={{ animation: 'swing 4s ease-in-out 1s infinite', transformOrigin: 'top center' }}>
+            {/* Lantern top hook */}
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-yellow-600 rounded-full" />
+            {/* Lantern glow */}
+            <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/80 to-yellow-400/60 rounded-t-full blur-sm animate-pulse" style={{ animationDelay: '0.3s' }} />
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes twinkle {
+          0%, 100% { 
+            opacity: 0.4; 
+            transform: scale(1); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale(1.5); 
+          }
+        }
+        @keyframes swing {
+          0%, 100% { 
+            transform: rotate(-8deg) translateX(0); 
+          }
+          50% { 
+            transform: rotate(8deg) translateX(2px); 
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
 
 const AutoCarousel = ({ children }: { children: React.ReactNode }) => {
   const [api, setApi] = useState<any>(null);
