@@ -338,21 +338,18 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="relative text-white py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 px-2 xs:px-3 sm:px-4 overflow-hidden mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8 mt-2 xs:mt-3 sm:mt-4 rounded-3xl">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 rounded-3xl bg-cover bg-top bg-no-repeat z-0"
-          style={{
-            backgroundImage: 'url(/cart.jpg)',
-          }}
-        />
-        {/* Silver and Sky Blue Gradient Overlays for polished effect */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-slate-400/30 via-sky-300/20 to-slate-500/40 z-[1]" />
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-sky-200/25 via-transparent to-slate-300/30 z-[1]" />
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black/20 via-transparent to-slate-400/15 z-[1]" />
-        {/* Subtle overlay for text readability */}
-        <div className="absolute inset-0 rounded-3xl bg-black/10 z-[1]" />
-        {/* Ramadan Animation - Above overlays but below text */}
-        <RamadanAnimation />
+        {/* Ramadan Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover rounded-3xl z-0"
+        >
+          <source src="/ramadan.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 rounded-3xl bg-black/30 z-[1]" />
         <div className="container relative mx-auto px-2 xs:px-3 sm:px-4 z-30">
           <div className="flex items-center justify-center">
             <div className="text-center max-w-3xl">
@@ -396,7 +393,7 @@ const Home = () => {
                 <>
                   <h1 className="text-2xl xs:text-[28px] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-2 xs:mb-3 sm:mb-4 drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)] px-2">
                     <span className="text-black font-black">
-                      Fresh Groceries Delivered in Minutes
+                      Make This Ramadan Special  with KasshIT
                     </span>
                   </h1>
                   <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl mb-4 xs:mb-5 sm:mb-6 md:mb-8 text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.7),0_1px_2px_rgba(0,0,0,0.5)] max-w-2xl mx-auto px-2 xs:px-3">
@@ -943,99 +940,6 @@ const Home = () => {
 
 export default Home;
 
-const RamadanAnimation = () => {
-  const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
-
-  useEffect(() => {
-    // Generate random stars
-    const newStars = Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 3,
-    }));
-    setStars(newStars);
-  }, []);
-
-  return (
-    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-[15]">
-      {/* Crescent Moon */}
-      <div className="absolute top-8 right-8 sm:top-12 sm:right-12 md:top-16 md:right-16 w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 z-20">
-        <div className="relative w-full h-full">
-          {/* Outer glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full opacity-90 animate-pulse blur-sm" />
-          {/* Main moon */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full opacity-100" />
-          {/* Crescent shadow */}
-          <div className="absolute left-1/2 top-1/2 w-3/4 h-3/4 bg-gradient-to-br from-black/80 to-black/60 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
-          {/* Inner glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 to-yellow-300/30 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-        </div>
-      </div>
-
-      {/* Stars */}
-      {stars.map((star) => (
-        <div
-          key={star.id}
-          className="absolute bg-white rounded-full z-20"
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: '4px',
-            height: '4px',
-            animation: `twinkle 2s ease-in-out ${star.delay}s infinite`,
-            boxShadow: '0 0 6px 3px rgba(255, 255, 255, 0.9), 0 0 12px 6px rgba(255, 255, 255, 0.5)',
-          }}
-        />
-      ))}
-
-      {/* Lanterns */}
-      <div className="absolute top-1/4 left-8 sm:left-12 md:left-16 w-10 h-16 sm:w-12 sm:h-20 md:w-14 md:h-24 opacity-90 z-20">
-        <div className="relative w-full h-full">
-          {/* Lantern body */}
-          <div className="w-full h-full bg-gradient-to-b from-yellow-400 via-yellow-300 to-yellow-500 rounded-t-full" style={{ animation: 'swing 3s ease-in-out infinite', transformOrigin: 'top center' }}>
-            {/* Lantern top hook */}
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-yellow-600 rounded-full" />
-            {/* Lantern glow */}
-            <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/80 to-yellow-400/60 rounded-t-full blur-sm animate-pulse" />
-          </div>
-        </div>
-      </div>
-      <div className="absolute top-1/3 right-16 sm:right-20 md:right-24 w-8 h-14 sm:w-10 sm:h-18 md:w-12 md:h-22 opacity-85 z-20">
-        <div className="relative w-full h-full">
-          {/* Lantern body */}
-          <div className="w-full h-full bg-gradient-to-b from-yellow-400 via-yellow-300 to-yellow-500 rounded-t-full" style={{ animation: 'swing 4s ease-in-out 1s infinite', transformOrigin: 'top center' }}>
-            {/* Lantern top hook */}
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-yellow-600 rounded-full" />
-            {/* Lantern glow */}
-            <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/80 to-yellow-400/60 rounded-t-full blur-sm animate-pulse" style={{ animationDelay: '0.3s' }} />
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes twinkle {
-          0%, 100% { 
-            opacity: 0.4; 
-            transform: scale(1); 
-          }
-          50% { 
-            opacity: 1; 
-            transform: scale(1.5); 
-          }
-        }
-        @keyframes swing {
-          0%, 100% { 
-            transform: rotate(-8deg) translateX(0); 
-          }
-          50% { 
-            transform: rotate(8deg) translateX(2px); 
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
 
 const AutoCarousel = ({ children }: { children: React.ReactNode }) => {
   const [api, setApi] = useState<any>(null);
