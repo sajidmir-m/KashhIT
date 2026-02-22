@@ -333,11 +333,11 @@ const Home = () => {
   // Note: CartButton component handles add to cart now
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
+    <div className="min-h-screen bg-gradient-to-b from-[#6B8E23] via-[#C0C0C0] to-[#556B2F]">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative text-white py-8 xs:py-10 sm:py-12 md:py-16 lg:py-20 px-2 xs:px-3 sm:px-4 overflow-hidden mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8 mt-2 xs:mt-3 sm:mt-4 rounded-3xl">
+      <section className="relative text-white py-4 xs:py-5 sm:py-6 md:py-8 lg:py-10 px-2 xs:px-3 sm:px-4 overflow-hidden mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8 mt-2 xs:mt-3 sm:mt-4 rounded-3xl">
         {/* Ramadan Video Background */}
         <video
           autoPlay
@@ -355,12 +355,12 @@ const Home = () => {
             <div className="text-center max-w-3xl">
               {isLoggedIn ? (
                 <>
-                  <h1 className="text-2xl xs:text-[28px] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-3 xs:mb-4 sm:mb-5 md:mb-6 drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)] px-2">
+                  <h1 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight mb-1 xs:mb-2 sm:mb-2 drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)] px-2">
                     <span className="text-gray-900">
                       Welcome back!
                     </span>
                   </h1>
-                  <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-4 xs:mb-5 sm:mb-6 md:mb-8 text-gray-900 font-bold drop-shadow-[0_1px_2px_rgba(255,255,255,0.2)] max-w-2xl mx-auto px-2 xs:px-3">
+                  <p className="text-xs xs:text-xs sm:text-sm md:text-base lg:text-base mb-3 xs:mb-3 sm:mb-4 md:mb-4 text-gray-900 font-bold drop-shadow-[0_1px_2px_rgba(255,255,255,0.2)] max-w-2xl mx-auto px-2 xs:px-3">
                     {isAdmin && "Manage your platform and oversee operations."}
                     {isVendor && "Manage your products and track your orders."}
                     {isDelivery && "View your delivery assignments and update status."}
@@ -391,12 +391,12 @@ const Home = () => {
                 </>
               ) : (
                 <>
-                  <h1 className="text-2xl xs:text-[28px] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-2 xs:mb-3 sm:mb-4 drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)] px-2">
+                  <h1 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight mb-1 xs:mb-2 sm:mb-2 drop-shadow-[0_2px_4px_rgba(255,255,255,0.5)] px-2">
                     <span className="text-black font-black">
                       Make This Ramadan Special  with KasshIT
                     </span>
                   </h1>
-                  <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl mb-4 xs:mb-5 sm:mb-6 md:mb-8 text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.7),0_1px_2px_rgba(0,0,0,0.5)] max-w-2xl mx-auto px-2 xs:px-3">
+                  <p className="text-xs xs:text-xs sm:text-sm md:text-base lg:text-base mb-3 xs:mb-3 sm:mb-4 md:mb-4 text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.7),0_1px_2px_rgba(0,0,0,0.5)] max-w-2xl mx-auto px-2 xs:px-3">
                     India's trusted quick commerce platform. Get fresh groceries, daily essentials & household products delivered fast. Secure payments, quality assured, lightning-fast delivery.
                   </p>
                   <div className="flex flex-col xs:flex-row gap-2 xs:gap-2 sm:gap-3 md:gap-4 justify-center items-center px-2 xs:px-3">
@@ -436,7 +436,7 @@ const Home = () => {
                     }}
                   />
                   {/* Overlay for better text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#6B8E23]/30 to-[#C0C0C0]/20" />
                   <div className="flex-1 text-center sm:text-left min-w-0 z-10 relative">
                     <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Big Savings on Essentials</h3>
                     <p className="text-white/95 mt-0.5 xs:mt-1 text-[10px] xs:text-xs sm:text-sm md:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Fast delivery to your doorstep.</p>
@@ -453,7 +453,7 @@ const Home = () => {
                     }}
                   />
                   {/* Overlay for better text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#6B8E23]/30 to-[#C0C0C0]/20" />
                   <div className="flex-1 text-center sm:text-left min-w-0 z-10 relative">
                     <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Fresh Arrivals</h3>
                     <p className="text-white/95 mt-0.5 xs:mt-1 text-[10px] xs:text-xs sm:text-sm md:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Discover new items curated for you.</p>
@@ -470,7 +470,7 @@ const Home = () => {
                     }}
                   />
                   {/* Overlay for better text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#6B8E23]/30 to-[#C0C0C0]/20" />
                   <div className="flex-1 text-center sm:text-left min-w-0 z-10 relative">
                     <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl font-extrabold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Recommended For You</h3>
                     <p className="text-white/95 mt-0.5 xs:mt-1 text-[10px] xs:text-xs sm:text-sm md:text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">Handpicked top picks by customers.</p>
@@ -483,13 +483,13 @@ const Home = () => {
       </section>
 
       {/* Shop by Category - UI only, links to products with query params */}
-      <section className="py-6 sm:py-8 md:py-12 px-0 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
+      <section className="py-6 sm:py-8 md:py-12 px-0 bg-gradient-to-b from-[#6B8E23] via-[#C0C0C0] to-[#556B2F]">
         <div className="w-full">
           <div className="mb-4 sm:mb-6 text-center px-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#800020] to-black bg-clip-text text-transparent">Shop by Category</h2>
-            <p className="text-sm sm:text-base text-[#800020] mt-1">Quickly find what you need</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#6B8E23] to-[#C0C0C0] bg-clip-text text-transparent">Shop by Category</h2>
+            <p className="text-sm sm:text-base text-[#6B8E23] mt-1">Quickly find what you need</p>
           </div>
-          <div className="rounded-2xl border border-red-900/50 p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-[#800020] via-black to-[#4a0000] mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8">
+          <div className="rounded-2xl border border-[#6B8E23]/50 p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-[#6B8E23] via-[#C0C0C0] to-[#556B2F] mx-2 xs:mx-3 sm:mx-4 md:mx-6 lg:mx-8">
             <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3 md:gap-4 justify-items-center items-start">
               {sortedHomeCategories.map((cat) => (
                   <Link key={cat.id} to={`/products?category=${cat.id}`} className="group cursor-pointer w-full">
@@ -514,9 +514,9 @@ const Home = () => {
 
       {/* Quick Actions for Logged-in Users */}
       {isLoggedIn && (
-        <section className="py-6 sm:py-8 md:py-12 px-4 bg-white">
+        <section className="py-6 sm:py-8 md:py-12 px-4 bg-[#6B8E23]">
           <div className="container mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900">Quick Actions</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-white">Quick Actions</h2>
             <div className="flex flex-wrap justify-center items-stretch gap-3 sm:gap-4 md:gap-5 lg:gap-6 max-w-6xl mx-auto">
               <Link to="/products" className="group flex-shrink-0">
                 <Card className="text-center border-none shadow-md hover:shadow-lg transition-shadow group-hover:scale-105 h-full w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]">
@@ -569,7 +569,7 @@ const Home = () => {
       )}
 
       {/* Featured Products */}
-      <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
+      <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#6B8E23] via-[#C0C0C0] to-[#556B2F]">
         <div className="container mx-auto">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3 sm:mb-4">
@@ -622,7 +622,7 @@ const Home = () => {
 
           <div className="text-center mt-6 sm:mt-8">
             <Link to="/products">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 py-3 whitespace-nowrap">
+              <Button size="lg" className="w-full sm:w-auto bg-[#0077BE] text-white hover:bg-[#005A8F] border-[#0077BE] hover:border-[#005A8F] px-6 py-3 whitespace-nowrap">
                 See All Products
               </Button>
             </Link>
@@ -690,7 +690,7 @@ const Home = () => {
 
       {/* Features Section - SEO Optimized */}
       {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-black via-[#800020] to-black">
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#C0C0C0] via-[#6B8E23] to-[#C0C0C0]">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-8 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
@@ -741,7 +741,7 @@ const Home = () => {
 
       {/* Trust Building Section */}
       {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#6B8E23] via-[#C0C0C0] to-[#556B2F]">
           <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
@@ -1076,7 +1076,7 @@ const MiniProductCard = ({ product, navigate, cartQuantity }: { product: any; na
 const HomeRail = ({ title, items, onAdd, navigate, cartQuantities }: { title: string; items: any[] | undefined; onAdd: (id: string) => void; navigate: any; cartQuantities: Record<string, number> }) => {
   if (!items || items.length === 0) return null;
   return (
-    <section className="py-6 sm:py-8 md:py-10 px-4 bg-gradient-to-b from-black via-[#800020] to-black">
+    <section className="py-6 sm:py-8 md:py-10 px-4 bg-gradient-to-b from-[#C0C0C0] via-[#6B8E23] to-[#C0C0C0]">
       <div className="container mx-auto">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">{title}</h3>
