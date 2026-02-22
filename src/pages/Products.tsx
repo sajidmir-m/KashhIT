@@ -242,7 +242,7 @@ const ProductCard = ({ product, navigate }: { product: any; navigate: any }) => 
   return (
     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col border border-gray-200 group relative bg-white rounded-lg">
       {/* Image Section - Fixed Height */}
-      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[160px] sm:h-[200px] md:h-[240px]" onClick={handleViewDetails}>
+      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[100px] sm:h-[120px] md:h-[140px]" onClick={handleViewDetails}>
         {product.categories?.name && (
           <div className="absolute top-1.5 left-1.5 z-10">
             <Badge variant="secondary" className="text-[8px] sm:text-[9px] px-1.5 py-0.5 bg-emerald-500/90 text-white border-0 backdrop-blur-sm shadow-sm">

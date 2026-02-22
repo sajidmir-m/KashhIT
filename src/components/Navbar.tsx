@@ -235,6 +235,25 @@ export const Navbar = () => {
             </div>
           </form>
 
+          {/* Desktop Navigation Menu */}
+          <div className="hidden lg:flex items-center space-x-1 mx-4">
+            <Link to="/products">
+              <Button variant="ghost" className="h-9 text-sm">
+                Products
+              </Button>
+            </Link>
+            <Link to="/services">
+              <Button variant="ghost" className="h-9 text-sm">
+                Services
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button variant="ghost" className="h-9 text-sm">
+                Contact
+              </Button>
+            </Link>
+          </div>
+
           {/* Right Side Actions - Desktop */}
           <div className="hidden lg:flex items-center space-x-1.5 sm:space-x-2 xl:space-x-3 flex-shrink-0 ml-auto">
             {showExploreProjects && (
@@ -465,8 +484,6 @@ export const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t bg-white">
             <div className="px-2 sm:px-3 py-3 space-y-1">
-
-
               <Link to="/products" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start text-sm">
                   Products
@@ -475,6 +492,16 @@ export const Navbar = () => {
               <Link to="/categories" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start text-sm">
                   Categories
+                </Button>
+              </Link>
+              <Link to="/services" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-sm">
+                  Services
+                </Button>
+              </Link>
+              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-sm">
+                  Contact
                 </Button>
               </Link>
               {showExploreProjects && (

@@ -116,19 +116,19 @@ const Cart = () => {
             <div className="lg:col-span-2 space-y-3 sm:space-y-4 max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {cartItems.map((item) => (
                 <Card key={item.id} className="p-3 sm:p-4 md:p-6 hover:shadow-lg transition-shadow duration-300 border-2 border-transparent hover:border-primary/20">
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-4">
-                    {/* Mobile: Large Product Image Card */}
-                    <div className="w-full sm:w-24 sm:h-24 md:w-28 md:h-28 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md sm:shadow-sm border border-gray-200/50">
+                  <div className="flex flex-row gap-3 sm:gap-4">
+                    {/* Product Image Icon - Left Side */}
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm border border-gray-200/50">
                       {item.products.main_image_url || item.products.image_url ? (
                         <img
                           src={item.products.main_image_url || item.products.image_url}
                           alt={item.products.name}
                           loading="lazy"
                           decoding="async"
-                          className="object-cover w-full h-full sm:rounded-lg"
+                          className="object-cover w-full h-full rounded-lg"
                         />
                       ) : (
-                        <ShoppingCart className="h-12 w-12 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground/50" />
+                        <ShoppingCart className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground/50" />
                       )}
                     </div>
 

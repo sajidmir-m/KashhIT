@@ -333,7 +333,7 @@ const Home = () => {
   // Note: CartButton component handles add to cart now
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
       <Navbar />
 
       {/* Hero Section */}
@@ -483,7 +483,7 @@ const Home = () => {
       </section>
 
       {/* Shop by Category - UI only, links to products with query params */}
-      <section className="py-6 sm:py-8 md:py-12 px-0 bg-white">
+      <section className="py-6 sm:py-8 md:py-12 px-0 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
         <div className="w-full">
           <div className="mb-4 sm:mb-6 text-center px-4">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#800020] to-black bg-clip-text text-transparent">Shop by Category</h2>
@@ -514,9 +514,9 @@ const Home = () => {
 
       {/* Quick Actions for Logged-in Users */}
       {isLoggedIn && (
-        <section className="py-6 sm:py-8 md:py-12 px-4 bg-background">
+        <section className="py-6 sm:py-8 md:py-12 px-4 bg-white">
           <div className="container mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">Quick Actions</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900">Quick Actions</h2>
             <div className="flex flex-wrap justify-center items-stretch gap-3 sm:gap-4 md:gap-5 lg:gap-6 max-w-6xl mx-auto">
               <Link to="/products" className="group flex-shrink-0">
                 <Card className="text-center border-none shadow-md hover:shadow-lg transition-shadow group-hover:scale-105 h-full w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]">
@@ -569,13 +569,13 @@ const Home = () => {
       )}
 
       {/* Featured Products */}
-      <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
+      <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
         <div className="container mx-auto">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-emerald-900 mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-3 sm:mb-4">
               {isLoggedIn ? "Featured Products" : "Discover Our Products"}
             </h2>
-            <p className="text-emerald-800 text-base sm:text-lg">
+            <p className="text-gray-200 text-base sm:text-lg">
               {isLoggedIn
                 ? "Handpicked selections from our top vendors"
                 : "Quality products from trusted vendors at unbeatable prices"
@@ -622,7 +622,7 @@ const Home = () => {
 
           <div className="text-center mt-6 sm:mt-8">
             <Link to="/products">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-emerald-300 text-emerald-900 hover:bg-emerald-50">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 py-3 whitespace-nowrap">
                 See All Products
               </Button>
             </Link>
@@ -690,46 +690,46 @@ const Home = () => {
 
       {/* Features Section - SEO Optimized */}
       {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-emerald-50 to-white">
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-black via-[#800020] to-black">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
                 Why Choose Kasshit?
               </h2>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl text-gray-200 max-w-2xl mx-auto">
                 Experience the future of grocery shopping with India's fastest quick commerce platform
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white/10 backdrop-blur-sm border border-white/20">
                 <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Zap className="h-8 w-8 text-emerald-600" />
+                  <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Zap className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Lightning Fast Delivery</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-bold mb-2 text-white">Lightning Fast Delivery</h3>
+                  <p className="text-gray-200">
                     Get your groceries delivered in minutes, not hours. Our optimized delivery network ensures fresh products reach you at lightning speed.
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white/10 backdrop-blur-sm border border-white/20">
                 <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Shield className="h-8 w-8 text-emerald-600" />
+                  <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Shield className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Secure Payments</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-bold mb-2 text-white">Secure Payments</h3>
+                  <p className="text-gray-200">
                     Shop with confidence using our secure payment gateway. Multiple payment options including UPI, cards, and cash on delivery.
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white/10 backdrop-blur-sm border border-white/20">
                 <CardContent className="p-6 text-center">
-                  <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-8 w-8 text-emerald-600" />
+                  <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Star className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-emerald-900">Quality Assured</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-bold mb-2 text-white">Quality Assured</h3>
+                  <p className="text-gray-200">
                     Every product is carefully selected and quality-checked. Fresh produce, authentic brands, and guaranteed satisfaction.
                   </p>
                 </CardContent>
@@ -741,63 +741,63 @@ const Home = () => {
 
       {/* Trust Building Section */}
       {!isLoggedIn && (
-        <section className="py-8 sm:py-12 md:py-16 px-4 bg-white">
+        <section className="py-8 sm:py-12 md:py-16 px-4 bg-gradient-to-b from-[#800020] via-black to-[#4a0000]">
           <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-900 mb-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
                   Trusted by Thousands of Customers
                 </h2>
-                <p className="text-lg text-muted-foreground mb-6">
+                <p className="text-lg text-gray-200 mb-6">
                   Join India's growing community of satisfied customers who trust Kasshit for their daily grocery needs. We're committed to delivering excellence with every order.
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Truck className="h-5 w-5 text-emerald-600" />
+                    <div className="bg-white/20 rounded-full p-2 mt-1">
+                      <Truck className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">Fast & Reliable Delivery</h4>
-                      <p className="text-muted-foreground text-sm">Average delivery time of 10-15 minutes in service areas</p>
+                      <h4 className="font-semibold text-white mb-1">Fast & Reliable Delivery</h4>
+                      <p className="text-gray-200 text-sm">Average delivery time of 10-15 minutes in service areas</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Shield className="h-5 w-5 text-emerald-600" />
+                    <div className="bg-white/20 rounded-full p-2 mt-1">
+                      <Shield className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">100% Secure Transactions</h4>
-                      <p className="text-muted-foreground text-sm">Your payment information is encrypted and secure</p>
+                      <h4 className="font-semibold text-white mb-1">100% Secure Transactions</h4>
+                      <p className="text-gray-200 text-sm">Your payment information is encrypted and secure</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="bg-emerald-100 rounded-full p-2 mt-1">
-                      <Star className="h-5 w-5 text-emerald-600" />
+                    <div className="bg-white/20 rounded-full p-2 mt-1">
+                      <Star className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-emerald-900 mb-1">Quality Guaranteed</h4>
-                      <p className="text-muted-foreground text-sm">Fresh products sourced directly from trusted suppliers</p>
+                      <h4 className="font-semibold text-white mb-1">Quality Guaranteed</h4>
+                      <p className="text-gray-200 text-sm">Fresh products sourced directly from trusted suppliers</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-8 rounded-lg">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-8 rounded-lg">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">10+</div>
-                    <div className="text-sm text-muted-foreground">Minutes Avg Delivery</div>
+                    <div className="text-4xl font-bold text-white mb-2">10+</div>
+                    <div className="text-sm text-gray-200">Minutes Avg Delivery</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">1000+</div>
-                    <div className="text-sm text-muted-foreground">Products Available</div>
+                    <div className="text-4xl font-bold text-white mb-2">1000+</div>
+                    <div className="text-sm text-gray-200">Products Available</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">24/7</div>
-                    <div className="text-sm text-muted-foreground">Customer Support</div>
+                    <div className="text-4xl font-bold text-white mb-2">24/7</div>
+                    <div className="text-sm text-gray-200">Customer Support</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-emerald-600 mb-2">100%</div>
-                    <div className="text-sm text-muted-foreground">Secure Payments</div>
+                    <div className="text-4xl font-bold text-white mb-2">100%</div>
+                    <div className="text-sm text-gray-200">Secure Payments</div>
                   </div>
                 </div>
               </div>
@@ -1000,7 +1000,7 @@ const MiniProductCard = ({ product, navigate, cartQuantity }: { product: any; na
   return (
     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col group border border-gray-200 relative bg-white rounded-lg">
       {/* Image Section - Fixed Height */}
-      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[160px] sm:h-[200px] md:h-[240px]" onClick={handleViewDetails}>
+      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[100px] sm:h-[120px] md:h-[140px]" onClick={handleViewDetails}>
         {product.categories?.name && (
           <div className="absolute top-1.5 left-1.5 z-10">
             <Badge variant="secondary" className="text-[8px] sm:text-[9px] px-1.5 py-0.5 bg-emerald-500/90 text-white border-0 backdrop-blur-sm shadow-sm">
@@ -1076,11 +1076,11 @@ const MiniProductCard = ({ product, navigate, cartQuantity }: { product: any; na
 const HomeRail = ({ title, items, onAdd, navigate, cartQuantities }: { title: string; items: any[] | undefined; onAdd: (id: string) => void; navigate: any; cartQuantities: Record<string, number> }) => {
   if (!items || items.length === 0) return null;
   return (
-    <section className="py-6 sm:py-8 md:py-10 px-4 bg-white">
+    <section className="py-6 sm:py-8 md:py-10 px-4 bg-gradient-to-b from-black via-[#800020] to-black">
       <div className="container mx-auto">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900">{title}</h3>
-          <Link to="/products" className="text-sm text-primary hover:underline">View all</Link>
+          <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">{title}</h3>
+          <Link to="/products" className="text-sm text-white/80 hover:text-white hover:underline">View all</Link>
         </div>
         <div className="relative">
           {/* Mobile: Horizontal scroll with 2 products */}
@@ -1136,7 +1136,7 @@ const ProductCard = ({ product, navigate, cartQuantity }: { product: any; naviga
   return (
     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col border border-gray-200 group relative bg-white rounded-lg">
       {/* Image Section - Fixed Height */}
-      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[160px] sm:h-[200px] md:h-[240px]" onClick={handleViewDetails}>
+      <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[100px] sm:h-[120px] md:h-[140px]" onClick={handleViewDetails}>
         {product.categories?.name && (
           <div className="absolute top-1.5 left-1.5 z-10">
             <Badge variant="secondary" className="text-[8px] sm:text-[9px] px-1.5 py-0.5 bg-emerald-500/90 text-white border-0 backdrop-blur-sm shadow-sm">

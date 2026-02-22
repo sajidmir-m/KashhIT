@@ -26,6 +26,9 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import About from "./pages/About";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import Portfolio from "./pages/Portfolio";
 import RefundPolicy from "./pages/RefundPolicy";
 import SearchPage from "./pages/Search";
 import ExploreProjects from "./pages/ExploreProjects";
@@ -80,6 +83,9 @@ const App = () => (
               <Route path="/career/:id" element={<InternshipDetail />} />
               <Route path="/internships/:id" element={<InternshipDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />

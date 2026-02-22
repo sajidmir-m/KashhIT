@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Package, ShoppingBag, ArrowLeft } from 'lucide-react';
 
@@ -92,33 +93,45 @@ const SearchPage = () => {
                     {searchSuggestions.map((product: any) => (
                       <Card
                         key={product.id}
-                        className="overflow-hidden hover:shadow-md transition-shadow w-full h-[200px] xs:h-[240px] sm:h-[280px] md:h-[320px] flex flex-col border border-gray-100 group"
+                        className="overflow-hidden hover:shadow-xl transition-all duration-300 w-full h-full flex flex-col border border-gray-200 group relative bg-white rounded-lg"
                         onClick={() => handleSuggestionClick(product.id)}
                       >
-                        <CardHeader className="p-0 cursor-pointer flex-shrink-0">
-                          <div className="w-full h-[160px] xs:h-[200px] sm:h-[240px] md:h-[280px] bg-gradient-card flex items-center justify-center overflow-hidden">
+                        <CardHeader className="p-0 cursor-pointer flex-shrink-0 relative h-[100px] sm:h-[120px] md:h-[140px]">
+                          <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden relative">
                             {(product.main_image_url || product.image_url) ? (
                               <img
                                 src={product.main_image_url || product.image_url}
                                 alt={product.name}
-                                className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform"
+                                loading="lazy"
+                                decoding="async"
+                                className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
                               />
                             ) : (
-                              <ShoppingBag className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-muted-foreground/50" />
+                              <ShoppingBag className="h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
                             )}
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                           </div>
+                          {product.categories?.name && (
+                            <div className="absolute top-1.5 left-1.5 z-10">
+                              <Badge variant="secondary" className="text-[8px] sm:text-[9px] px-1.5 py-0.5 bg-emerald-500/90 text-white border-0 backdrop-blur-sm shadow-sm">
+                                {product.categories.name}
+                              </Badge>
+                            </div>
+                          )}
                         </CardHeader>
-                        <CardContent className="p-1.5 xs:p-2 flex-1 flex flex-col overflow-hidden">
-                          <p className="text-[8px] xs:text-[9px] sm:text-[10px] text-muted-foreground/70 mb-0.5 xs:mb-1 line-clamp-1 flex-shrink-0">{product.categories?.name}</p>
+                        <CardContent className="p-2 sm:p-2.5 flex-1 flex flex-col min-h-0">
                           <CardTitle 
-                            className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm mb-1 xs:mb-1.5 line-clamp-2 cursor-pointer hover:text-primary transition-colors break-words flex-shrink-0"
+                            className="text-xs sm:text-sm font-semibold mb-1.5 line-clamp-2 cursor-pointer hover:text-emerald-600 transition-colors text-gray-900 leading-tight"
+                            onClick={() => handleSuggestionClick(product.id)}
                           >
                             {product.name}
                           </CardTitle>
-                          <div className="flex items-center justify-between mt-auto gap-1 pt-1 flex-shrink-0">
-                            <div className="flex items-baseline gap-0.5">
-                              <span className="text-[10px] xs:text-xs sm:text-sm md:text-base font-bold text-primary break-all">₹{product.price}</span>
-                              {product.unit && <span className="text-[7px] xs:text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground flex-shrink-0 whitespace-nowrap">/{product.unit}</span>}
+                          <div className="mb-2 space-y-1">
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-base sm:text-lg font-bold text-emerald-600">₹{product.price}</span>
+                              {product.unit && (
+                                <span className="text-[9px] sm:text-[10px] text-gray-500">/{product.unit}</span>
+                              )}
                             </div>
                           </div>
                         </CardContent>
