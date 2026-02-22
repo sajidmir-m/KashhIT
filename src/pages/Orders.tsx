@@ -596,6 +596,39 @@ const Orders = () => {
                     <CardContent className="pt-0">
                       <UserOrderTracking orderId={order.id} />
                       <StatusTimeline status={(effectiveStatus || 'pending') as string} />
+                      
+                      {/* Packing Video - Show until order is picked up */}
+                      {effectiveStatus !== 'picked_up' && effectiveStatus !== 'out_for_delivery' && effectiveStatus !== 'delivered' && effectiveStatus !== 'cancelled' && (
+                        <div className="mb-4 rounded-lg overflow-hidden">
+                          <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-auto max-h-[300px] object-cover rounded-lg"
+                          >
+                            <source src="/packing.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      )}
+                      
+                      {/* Delivery Video - Show when order is picked up or out for delivery */}
+                      {(effectiveStatus === 'picked_up' || effectiveStatus === 'out_for_delivery') && (
+                        <div className="mb-4 rounded-lg overflow-hidden">
+                          <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-auto max-h-[300px] object-cover rounded-lg"
+                          >
+                            <source src="/delivery.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      )}
+                      
                       <div className="space-y-2 mb-3 sm:mb-4">
                         {order.order_items?.map((item) => (
                           <div key={item.id} className="flex justify-between text-xs sm:text-sm">
